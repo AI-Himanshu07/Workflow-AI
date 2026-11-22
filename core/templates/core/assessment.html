@@ -1,0 +1,732 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Skill Assessment - {{ job.title }} | Workflow AI</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+        body {
+            background: #f5f7fb;
+        }
+
+        .navbar-brand {
+            letter-spacing: 0.3px;
+        }
+
+        .assessment-header {
+            background: linear-gradient(135deg, #0d6efd, #4f8dfd);
+            color: white;
+            border-radius: 18px;
+        }
+
+        .question-card {
+            border: none;
+            border-radius: 16px;
+            transition: 0.2s ease;
+        }
+
+        .question-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+
+        .option-box {
+            display: block;
+            padding: 14px 16px;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .option-box:hover {
+            background: #f1f6ff;
+            border-color: #0d6efd;
+        }
+
+        .option-box input {
+            margin-right: 10px;
+        }
+
+        .option-box:has(input:checked) {
+            background: #eef5ff;
+            border-color: #0d6efd;
+        }
+
+        .submit-box {
+            position: sticky;
+            bottom: 15px;
+            z-index: 10;
+        }
+
+        .security-panel {
+            border-radius: 14px;
+        }
+
+        .timer-value {
+            font-size: 1.7rem;
+            font-weight: 800;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .timer-warning {
+            color: #dc3545 !important;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav class="navbar navbar-expand-lg bg-white border-bottom">
+    <div class="container">
+
+        <a class="navbar-brand fw-bold text-primary" href="/">
+            Workflow AI
+        </a>
+
+        <div>
+            <a
+                href="/student/dashboard/"
+                class="btn btn-outline-secondary btn-sm"
+            >
+                Dashboard
+            </a>
+        </div>
+
+    </div>
+</nav>
+
+
+<!-- MAIN -->
+
+<div class="container py-5">
+
+    <!-- HEADER -->
+
+    <div class="assessment-header p-4 p-md-5 mb-4 shadow-sm">
+
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+
+            <div>
+                <h1 class="fw-bold mb-2">
+                    Skill Assessment
+                </h1>
+
+                <h4 class="mb-2">
+                    {{ job.title }}
+                </h4>
+
+                <p class="mb-0 opacity-75">
+                    {{ job.company.company_name }}
+                </p>
+            </div>
+
+            <div class="text-md-end">
+                <div class="fw-bold">
+                    {{ questions|length }} Questions
+                </div>
+
+                <div>
+                    Total Marks: {{ attempt.total_marks }}
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- TIMER AND SECURITY PANEL -->
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-6">
+
+            <div class="card border-0 shadow-sm h-100 security-panel">
+
+                <div class="card-body d-flex justify-content-between align-items-center">
+
+                    <div>
+                        <div class="text-muted small fw-semibold">
+                            TIME REMAINING
+                        </div>
+
+                        <div id="assessmentTimer" class="timer-value text-primary">
+                            30:00
+                        </div>
+                    </div>
+
+                    <div class="text-primary">
+                        <span style="font-size: 2rem;">⏱</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-6">
+
+            <div class="card border-0 shadow-sm h-100 security-panel">
+
+                <div class="card-body">
+
+                    <div class="text-muted small fw-semibold mb-2">
+                        SECURITY MONITORING
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <span class="fw-bold" id="violationCount">
+                                {{ attempt.violation_count }}
+                            </span>
+
+                            <span class="text-muted">
+                                / {{ max_violations }} violations
+                            </span>
+                        </div>
+
+                        <span class="badge bg-success" id="securityStatus">
+                            Active
+                        </span>
+
+                    </div>
+
+                    <div class="progress mt-3" style="height: 7px;">
+
+                        <div
+                            class="progress-bar bg-warning"
+                            id="violationProgress"
+                            role="progressbar"
+                            style="width: 0%;"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- INSTRUCTIONS -->
+
+    <div class="alert alert-info border-0 shadow-sm">
+
+        <strong>Before you begin:</strong>
+
+        <ul class="mb-0 mt-2">
+            <li>Read each question carefully.</li>
+            <li>Select one answer for every question.</li>
+            <li>Each question carries its assigned marks.</li>
+            <li>Your score will be calculated automatically.</li>
+            <li>You have 30 minutes to complete the assessment.</li>
+            <li>Switching tabs or leaving the assessment window counts as a security violation.</li>
+            <li>The assessment will automatically terminate after 2 violations.</li>
+            <li>Once submitted, the assessment cannot be attempted again.</li>
+        </ul>
+
+    </div>
+
+
+    <!-- SECURITY WARNING -->
+
+    <div
+        id="securityWarning"
+        class="alert alert-warning shadow-sm d-none"
+        role="alert"
+    >
+        <strong>Security warning!</strong>
+        <span id="securityWarningText"></span>
+    </div>
+
+
+    <!-- ASSESSMENT FORM -->
+
+    <form
+        id="assessmentForm"
+        method="POST"
+        action="{% url 'submit_assessment' application.id %}"
+    >
+
+        {% csrf_token %}
+
+        {% for question in questions %}
+
+        <div class="card question-card shadow-sm mb-4">
+
+            <div class="card-body p-4">
+
+                <div class="d-flex justify-content-between gap-3 mb-3">
+
+                    <h5 class="fw-bold mb-0">
+                        Q{{ forloop.counter }}.
+                        {{ question.question }}
+                    </h5>
+
+                    <span class="badge bg-primary align-self-start">
+                        {{ question.marks }}
+                        mark{{ question.marks|pluralize }}
+                    </span>
+
+                </div>
+
+
+                {% if question.skill %}
+
+                <div class="mb-3">
+                    <span class="badge bg-light text-primary border">
+                        Skill: {{ question.skill }}
+                    </span>
+                </div>
+
+                {% endif %}
+
+
+                <label class="option-box">
+                    <input
+                        type="radio"
+                        name="question_{{ question.id }}"
+                        value="A"
+                    >
+                    <strong>A.</strong>
+                    {{ question.option_a }}
+                </label>
+
+
+                <label class="option-box">
+                    <input
+                        type="radio"
+                        name="question_{{ question.id }}"
+                        value="B"
+                    >
+                    <strong>B.</strong>
+                    {{ question.option_b }}
+                </label>
+
+
+                <label class="option-box">
+                    <input
+                        type="radio"
+                        name="question_{{ question.id }}"
+                        value="C"
+                    >
+                    <strong>C.</strong>
+                    {{ question.option_c }}
+                </label>
+
+
+                <label class="option-box">
+                    <input
+                        type="radio"
+                        name="question_{{ question.id }}"
+                        value="D"
+                    >
+                    <strong>D.</strong>
+                    {{ question.option_d }}
+                </label>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+
+        <!-- SUBMIT -->
+
+        <div class="submit-box">
+
+            <div class="card shadow border-0">
+
+                <div class="card-body p-3 d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+                    <div>
+                        <strong>Ready to submit?</strong>
+
+                        <div class="text-muted small">
+                            Make sure you have reviewed your answers.
+                        </div>
+                    </div>
+
+                    <button
+                        type="submit"
+                        id="submitButton"
+                        class="btn btn-primary btn-lg px-5"
+                    >
+                        Submit Assessment
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<!-- DJANGO SAFE JAVASCRIPT DATA -->
+
+{{ max_violations|json_script:"assessment-max-violations" }}
+{{ remaining_seconds|json_script:"assessment-remaining-seconds" }}
+{{ attempt.violation_count|json_script:"assessment-violation-count" }}
+
+
+<script>
+
+    // =====================================================
+    // ASSESSMENT CONFIGURATION
+    // =====================================================
+
+    const form = document.getElementById('assessmentForm');
+
+    const timerElement = document.getElementById('assessmentTimer');
+
+    const violationCountElement = document.getElementById('violationCount');
+
+    const violationProgress = document.getElementById('violationProgress');
+
+    const securityStatus = document.getElementById('securityStatus');
+
+    const securityWarning = document.getElementById('securityWarning');
+
+    const securityWarningText = document.getElementById('securityWarningText');
+
+    const submitButton = document.getElementById('submitButton');
+
+    const csrfToken = form.querySelector(
+        '[name=csrfmiddlewaretoken]'
+    ).value;
+
+
+    // =====================================================
+    // DJANGO DATA
+    // =====================================================
+
+    const MAX_VIOLATIONS = JSON.parse(
+        document.getElementById('assessment-max-violations').textContent
+    );
+
+    let remainingSeconds = JSON.parse(
+        document.getElementById('assessment-remaining-seconds').textContent
+    );
+
+    let violationCount = JSON.parse(
+        document.getElementById('assessment-violation-count').textContent
+    );
+
+
+    // =====================================================
+    // URLS AND STATE
+    // =====================================================
+
+    const violationUrl = "{% url 'record_assessment_violation' attempt.id %}";
+
+    const resultUrl = "{% url 'assessment_result' attempt.id %}";
+
+    let isSubmitting = false;
+
+    let isTerminated = false;
+
+    let violationRequestPending = false;
+
+    let lastViolationTime = 0;
+
+    const VIOLATION_COOLDOWN = 1500;
+
+
+    // =====================================================
+    // TIMER DISPLAY
+    // =====================================================
+
+    function updateTimer() {
+
+        const minutes = Math.floor(remainingSeconds / 60);
+
+        const seconds = remainingSeconds % 60;
+
+        timerElement.textContent =
+            String(minutes).padStart(2, '0')
+            + ':'
+            + String(seconds).padStart(2, '0');
+
+        if (remainingSeconds <= 300) {
+            timerElement.classList.add('timer-warning');
+        }
+
+    }
+
+
+    // =====================================================
+    // TIMER COUNTDOWN
+    // =====================================================
+
+    updateTimer();
+
+    const timerInterval = setInterval(function () {
+
+        if (isSubmitting || isTerminated) {
+            clearInterval(timerInterval);
+            return;
+        }
+
+        remainingSeconds--;
+
+        updateTimer();
+
+        if (remainingSeconds <= 0) {
+
+            clearInterval(timerInterval);
+
+            isSubmitting = true;
+
+            submitButton.disabled = true;
+
+            submitButton.textContent = 'Time expired. Submitting...';
+
+            form.submit();
+
+        }
+
+    }, 1000);
+
+
+    // =====================================================
+    // VIOLATION DISPLAY
+    // =====================================================
+
+    function updateViolationDisplay() {
+
+        violationCountElement.textContent = violationCount;
+
+        const percentage = Math.min(
+            (violationCount / MAX_VIOLATIONS) * 100,
+            100
+        );
+
+        violationProgress.style.width = percentage + '%';
+
+        if (violationCount >= MAX_VIOLATIONS) {
+
+            securityStatus.className = 'badge bg-danger';
+
+            securityStatus.textContent = 'Terminated';
+
+        } else if (violationCount > 0) {
+
+            securityStatus.className = 'badge bg-warning text-dark';
+
+            securityStatus.textContent = 'Warning';
+
+        } else {
+
+            securityStatus.className = 'badge bg-success';
+
+            securityStatus.textContent = 'Active';
+
+        }
+
+    }
+
+    updateViolationDisplay();
+
+
+    // =====================================================
+    // SHOW WARNING
+    // =====================================================
+
+    function showSecurityWarning(message) {
+
+        securityWarningText.textContent = ' ' + message;
+
+        securityWarning.classList.remove('d-none');
+
+    }
+
+
+    // =====================================================
+    // RECORD SECURITY VIOLATION
+    // =====================================================
+
+    async function recordViolation(type) {
+
+        if (
+            isSubmitting
+            || isTerminated
+            || violationRequestPending
+        ) {
+            return;
+        }
+
+        const now = Date.now();
+
+        if (now - lastViolationTime < VIOLATION_COOLDOWN) {
+            return;
+        }
+
+        lastViolationTime = now;
+
+        violationRequestPending = true;
+
+        try {
+
+            const formData = new FormData();
+
+            formData.append('violation_type', type);
+
+            const response = await fetch(violationUrl, {
+
+                method: 'POST',
+
+                headers: {
+                    'X-CSRFToken': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+
+                body: formData,
+
+                credentials: 'same-origin'
+
+            });
+
+            const data = await response.json();
+
+            if (data.violation_count !== undefined) {
+
+                violationCount = data.violation_count;
+
+                updateViolationDisplay();
+
+            }
+
+            if (data.terminated) {
+
+                isTerminated = true;
+
+                clearInterval(timerInterval);
+
+                submitButton.disabled = true;
+
+                securityStatus.textContent = 'Terminated';
+
+                showSecurityWarning(
+                    data.message || 'Your assessment has been terminated.'
+                );
+
+                window.location.replace(
+                    data.redirect_url || resultUrl
+                );
+
+                return;
+            }
+
+            if (data.success) {
+
+                showSecurityWarning(
+                    data.message
+                    + ' Further violations may terminate your assessment.'
+                );
+
+            } else {
+
+                showSecurityWarning(
+                    data.message || 'Unable to record this violation.'
+                );
+
+            }
+
+        } catch (error) {
+
+            showSecurityWarning(
+                'We could not verify this security event. Check your internet connection.'
+            );
+
+        } finally {
+
+            violationRequestPending = false;
+
+        }
+
+    }
+
+
+    // =====================================================
+    // TAB SWITCH DETECTION
+    // =====================================================
+
+    document.addEventListener(
+        'visibilitychange',
+        function () {
+
+            if (document.hidden) {
+                recordViolation('tab_switch');
+            }
+
+        }
+    );
+
+
+    // =====================================================
+    // WINDOW FOCUS DETECTION
+    // =====================================================
+
+    window.addEventListener(
+        'blur',
+        function () {
+
+            recordViolation('window_blur');
+
+        }
+    );
+
+
+    // =====================================================
+    // SUBMISSION PROTECTION
+    // =====================================================
+
+    form.addEventListener('submit', function (event) {
+
+        if (isTerminated) {
+            event.preventDefault();
+            return;
+        }
+
+        if (isSubmitting) {
+            event.preventDefault();
+            return;
+        }
+
+        isSubmitting = true;
+
+        clearInterval(timerInterval);
+
+        submitButton.disabled = true;
+
+        submitButton.textContent = 'Submitting Assessment...';
+
+    });
+
+</script>
+
+</body>
+</html>

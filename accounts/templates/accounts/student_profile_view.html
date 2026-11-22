@@ -1,0 +1,245 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Profile - Workflow AI</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+        body {
+            background: #f5f7fb;
+        }
+
+        .profile-card {
+            border: none;
+            border-radius: 18px;
+        }
+
+        .profile-heading {
+            color: #243b63;
+        }
+
+        .info-box {
+            background: #f8faff;
+            border: 1px solid #e7edf7;
+            border-radius: 10px;
+            padding: 14px 16px;
+            height: 100%;
+        }
+
+        .info-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #68778d;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            color: #263750;
+            margin-bottom: 0;
+            overflow-wrap: anywhere;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg bg-white border-bottom">
+    <div class="container">
+
+        <a class="navbar-brand fw-bold" href="/">
+            Workflow AI
+        </a>
+
+        <div>
+            <a
+                href="/student/dashboard/"
+                class="btn btn-outline-primary me-2"
+            >
+                Dashboard
+            </a>
+
+            <a
+                href="/accounts/logout/"
+                class="btn btn-outline-danger"
+            >
+                Logout
+            </a>
+        </div>
+
+    </div>
+</nav>
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="card profile-card shadow-sm">
+                <div class="card-body p-4 p-md-5">
+
+                    <h1 class="fw-bold profile-heading mb-1">
+                        My Profile
+                    </h1>
+
+                    <p class="text-muted mb-4">
+                        Your Workflow AI student profile
+                    </p>
+
+                    <!-- Personal Information -->
+
+                    <h4 class="fw-bold mb-3">
+                        Personal Information
+                    </h4>
+
+                    <div class="row g-3 mb-4">
+
+                        <div class="col-md-6">
+                            <div class="info-box">
+                                <div class="info-label">Full Name</div>
+                                <p class="info-value">
+                                    {{ profile.full_name|default:"Not provided" }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="info-box">
+                                <div class="info-label">Registered Email</div>
+                                <p class="info-value">
+                                    {{ email|default:"Not provided" }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="info-box">
+                                <div class="info-label">Phone</div>
+                                <p class="info-value">
+                                    {{ profile.phone|default:"Not provided" }}
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Education -->
+
+                    <h4 class="fw-bold mb-3">
+                        Education
+                    </h4>
+
+                    <div class="row g-3 mb-4">
+
+                        <div class="col-md-6">
+                            <div class="info-box">
+                                <div class="info-label">
+                                    College / University
+                                </div>
+                                <p class="info-value">
+                                    {{ profile.college|default:"Not provided" }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="info-box">
+                                <div class="info-label">Degree</div>
+                                <p class="info-value">
+                                    {{ profile.degree|default:"Not provided" }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="info-box">
+                                <div class="info-label">Graduation Year</div>
+                                <p class="info-value">
+                                    {{ profile.graduation_year|default:"Not provided" }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="info-box">
+                                <div class="info-label">CGPA</div>
+                                <p class="info-value">
+                                    {{ profile.cgpa|default:"Not provided" }}
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Skills & Experience -->
+
+                    <h4 class="fw-bold mb-3">
+                        Skills & Experience
+                    </h4>
+
+                    <div class="info-box mb-3">
+                        <div class="info-label">Skills</div>
+                        <p class="info-value">
+                            {{ profile.skills|default:"Not provided"|linebreaksbr }}
+                        </p>
+                    </div>
+
+                    <div class="info-box mb-3">
+                        <div class="info-label">Projects</div>
+                        <p class="info-value">
+                            {{ profile.projects|default:"Not provided"|linebreaksbr }}
+                        </p>
+                    </div>
+
+                    <div class="info-box mb-4">
+                        <div class="info-label">Certifications</div>
+                        <p class="info-value">
+                            {{ profile.certifications|default:"Not provided"|linebreaksbr }}
+                        </p>
+                    </div>
+
+                    <!-- Buttons -->
+
+                    <div class="d-flex flex-wrap gap-2">
+
+                        <a
+                            href="/accounts/student/profile/"
+                            class="btn btn-primary"
+                        >
+                            Edit Profile
+                        </a>
+
+                        <a
+                            href="/accounts/student/profile/delete/"
+                            class="btn btn-outline-danger"
+                        >
+                            Delete Profile
+                        </a>
+
+                        <a
+                            href="/student/dashboard/"
+                            class="btn btn-outline-secondary"
+                        >
+                            Back to Dashboard
+                        </a>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

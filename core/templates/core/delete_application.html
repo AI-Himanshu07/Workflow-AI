@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Withdraw Application - Workflow AI</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+</head>
+
+
+<body class="bg-light">
+
+
+<nav class="navbar navbar-expand-lg bg-white border-bottom">
+
+    <div class="container">
+
+        <a
+            class="navbar-brand fw-bold"
+            href="/"
+        >
+            Workflow AI
+        </a>
+
+    </div>
+
+</nav>
+
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-6">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body p-5 text-center">
+
+                    <h2 class="fw-bold mb-3">
+                        Withdraw Application?
+                    </h2>
+
+                    <p class="text-muted">
+                        Are you sure you want to withdraw your
+                        application for:
+                    </p>
+
+                    <h4 class="fw-bold">
+                        {{ application.job.title }}
+                    </h4>
+
+                    <p class="text-muted">
+                        {{ application.job.company.company_name }}
+                    </p>
+
+
+                    <form
+                        method="POST"
+                        class="mt-4"
+                    >
+
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="btn btn-danger me-2"
+                        >
+                            Yes, Withdraw
+                        </button>
+
+
+                        <a
+                            href="{% url 'my_applications' %}"
+                            class="btn btn-outline-secondary"
+                        >
+                            Cancel
+                        </a>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</body>
+
+</html>

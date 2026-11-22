@@ -1,0 +1,329 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Assessment Question | Workflow AI</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f5f7fb;
+            color: #172033;
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            background: #fff;
+        }
+
+        .brand {
+            color: #2563eb;
+            font-weight: 800;
+        }
+
+        .form-card {
+            border: 1px solid #e8edf5;
+            border-radius: 18px;
+        }
+
+        .section-label {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: .5px;
+            color: #64748b;
+        }
+
+        .form-control,
+        .form-select {
+            padding: 12px 14px;
+            border-color: #dce3ed;
+            border-radius: 10px;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, .10);
+        }
+
+        .option-label {
+            font-weight: 600;
+        }
+
+        .primary-btn {
+            background: #2563eb;
+            border-color: #2563eb;
+        }
+
+        .primary-btn:hover {
+            background: #1d4ed8;
+            border-color: #1d4ed8;
+        }
+
+        .info-panel {
+            background: #eff6ff;
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar border-bottom">
+    <div class="container py-2">
+
+        <a href="/company/dashboard/" class="navbar-brand brand">
+            Workflow AI
+        </a>
+
+        <a href="{% url 'manage_assessment_questions' job.id %}"
+           class="btn btn-outline-secondary btn-sm">
+            Back to Assessment
+        </a>
+
+    </div>
+</nav>
+
+<main class="container py-4 py-md-5">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <!-- HEADER -->
+            <div class="mb-4">
+
+                <div class="section-label text-primary mb-2">
+                    COMPANY ASSESSMENT BUILDER
+                </div>
+
+                <h1 class="fw-bold mb-2">
+                    Add Assessment Question
+                </h1>
+
+                <p class="text-muted mb-2">
+                    Create an MCQ question to evaluate candidates' skills.
+                </p>
+
+                <div class="fw-semibold">
+                    Job: {{ job.title }}
+                </div>
+
+            </div>
+
+            {% if error %}
+                <div class="alert alert-danger rounded-3">
+                    {{ error }}
+                </div>
+            {% endif %}
+
+            <!-- FORM -->
+            <div class="card form-card shadow-sm">
+
+                <div class="card-body p-4 p-md-5">
+
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <!-- QUESTION -->
+                        <div class="mb-4">
+
+                            <label class="form-label fw-bold">
+                                Question
+                            </label>
+
+                            <textarea
+                                name="question"
+                                class="form-control"
+                                rows="4"
+                                placeholder="Example: Which keyword is used to define a function in Python?"
+                                required
+                            ></textarea>
+
+                        </div>
+
+                        <hr class="my-4 opacity-25">
+
+                        <!-- OPTIONS -->
+                        <div class="mb-3">
+                            <h5 class="fw-bold mb-1">Answer Options</h5>
+                            <p class="text-muted small mb-0">
+                                Enter four possible answers for this question.
+                            </p>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label option-label">
+                                    Option A
+                                </label>
+                                <input
+                                    type="text"
+                                    name="option_a"
+                                    class="form-control"
+                                    placeholder="Enter option A"
+                                    required
+                                >
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label option-label">
+                                    Option B
+                                </label>
+                                <input
+                                    type="text"
+                                    name="option_b"
+                                    class="form-control"
+                                    placeholder="Enter option B"
+                                    required
+                                >
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label option-label">
+                                    Option C
+                                </label>
+                                <input
+                                    type="text"
+                                    name="option_c"
+                                    class="form-control"
+                                    placeholder="Enter option C"
+                                    required
+                                >
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label option-label">
+                                    Option D
+                                </label>
+                                <input
+                                    type="text"
+                                    name="option_d"
+                                    class="form-control"
+                                    placeholder="Enter option D"
+                                    required
+                                >
+                            </div>
+
+                        </div>
+
+                        <hr class="my-4 opacity-25">
+
+                        <!-- CORRECT ANSWER -->
+                        <div class="mb-4">
+
+                            <label class="form-label fw-bold">
+                                Correct Answer
+                            </label>
+
+                            <select
+                                name="correct_answer"
+                                class="form-select"
+                                required
+                            >
+                                <option value="">Select correct option</option>
+                                <option value="A">Option A</option>
+                                <option value="B">Option B</option>
+                                <option value="C">Option C</option>
+                                <option value="D">Option D</option>
+                            </select>
+
+                            <div class="form-text">
+                                This answer will be used for automatic assessment scoring.
+                            </div>
+
+                        </div>
+
+                        <!-- SKILL AND MARKS -->
+                        <div class="row">
+
+                            <div class="col-md-8 mb-4">
+
+                                <label class="form-label fw-bold">
+                                    Skill
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="skill"
+                                    class="form-control"
+                                    placeholder="Example: Python, SQL, Django"
+                                >
+
+                                <div class="form-text">
+                                    Optional. Identifies the skill tested.
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-4 mb-4">
+
+                                <label class="form-label fw-bold">
+                                    Marks
+                                </label>
+
+                                <input
+                                    type="number"
+                                    name="marks"
+                                    class="form-control"
+                                    value="1"
+                                    min="1"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+                        <!-- INFORMATION -->
+                        <div class="info-panel p-3 mb-4">
+                            <div class="fw-semibold text-primary mb-1">
+                                Assessment scoring
+                            </div>
+                            <div class="small text-muted">
+                                Candidates will receive marks for correct answers.
+                                Their final percentage will contribute to the company
+                                applicant ranking.
+                            </div>
+                        </div>
+
+                        <!-- BUTTONS -->
+                        <div class="d-flex flex-wrap gap-2">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary primary-btn px-4 py-2"
+                            >
+                                Save Question
+                            </button>
+
+                            <a
+                                href="{% url 'manage_assessment_questions' job.id %}"
+                                class="btn btn-outline-secondary px-4 py-2"
+                            >
+                                Cancel
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+            <p class="text-center text-muted small mt-4">
+                Workflow AI · Assessment Management
+            </p>
+
+        </div>
+    </div>
+
+</main>
+
+</body>
+</html>

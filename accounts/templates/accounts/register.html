@@ -1,0 +1,926 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account | Workflow AI</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 35px 18px;
+            background:
+                radial-gradient(circle at 10% 10%, #e8eaff 0, transparent 32%),
+                radial-gradient(circle at 90% 90%, #e9e3ff 0, transparent 30%),
+                #f6f7ff;
+            font-family: 'DM Sans', sans-serif;
+            color: #20243a;
+        }
+
+        .main-card {
+            width: 100%;
+            max-width: 1050px;
+            min-height: 650px;
+            display: grid;
+            grid-template-columns: 1fr 0.95fr;
+            background: #ffffff;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 25px 75px rgba(65, 69, 130, 0.13);
+            animation: cardAppear 0.7s ease both;
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* FORM SIDE */
+
+        .form-panel {
+            padding: 38px 55px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            margin-bottom: 30px;
+        }
+
+        .brand-logo {
+            width: 43px;
+            height: 43px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-family: 'Manrope', sans-serif;
+            font-weight: 800;
+            font-size: 21px;
+            background: linear-gradient(135deg, #6675f5, #9b70ed);
+            box-shadow: 0 7px 18px rgba(112, 111, 232, 0.3);
+        }
+
+        .brand-name {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 800;
+            font-size: 19px;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-name span {
+            color: #7775e9;
+        }
+
+        .heading {
+            font-family: 'Manrope', sans-serif;
+            font-size: 29px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #85899d;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            color: #42465c;
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .form-control,
+        .form-select {
+            min-height: 48px;
+            border: 1px solid #e5e7f0;
+            border-radius: 11px;
+            padding: 11px 14px;
+            font-size: 14px;
+            color: #30344b;
+            background-color: #fbfbfe;
+            transition: 0.2s ease;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            background: #ffffff;
+            border-color: #8582ee;
+            box-shadow: 0 0 0 4px rgba(133, 130, 238, 0.12);
+        }
+
+        .form-control::placeholder {
+            color: #b0b3c2;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper .form-control {
+            padding-right: 75px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: #7775df;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .role-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .role-option {
+            position: relative;
+        }
+
+        .role-option input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .role-option label {
+            min-height: 48px;
+            border: 1px solid #e5e7f0;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #686d82;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s ease;
+            background: #fbfbfe;
+        }
+
+        .role-option input:checked + label {
+            border-color: #8582ee;
+            background: #f1f0ff;
+            color: #6563d6;
+            box-shadow: 0 0 0 3px rgba(133, 130, 238, 0.09);
+        }
+
+        .role-option label:hover {
+            border-color: #aaa8f2;
+        }
+
+        .create-btn {
+            min-height: 49px;
+            width: 100%;
+            border: none;
+            border-radius: 11px;
+            background: linear-gradient(110deg, #6876ed, #9172e9);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 14px;
+            margin-top: 8px;
+            box-shadow: 0 9px 20px rgba(112, 111, 232, 0.22);
+            transition: 0.25s ease;
+        }
+
+        .create-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(112, 111, 232, 0.3);
+            color: white;
+        }
+
+        .login-text {
+            text-align: center;
+            margin-top: 22px;
+            color: #85899d;
+            font-size: 13px;
+        }
+
+        .login-text a {
+            color: #716fe0;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .login-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* MASCOT SIDE */
+
+        .mascot-panel {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            background:
+                radial-gradient(circle at 50% 45%, rgba(255,255,255,0.9), transparent 38%),
+                linear-gradient(145deg, #e9ebff, #e8e1ff 55%, #dce8ff);
+        }
+
+        .mascot-panel::before,
+        .mascot-panel::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.35);
+        }
+
+        .mascot-panel::before {
+            width: 260px;
+            height: 260px;
+            top: -95px;
+            right: -85px;
+        }
+
+        .mascot-panel::after {
+            width: 190px;
+            height: 190px;
+            bottom: -70px;
+            left: -65px;
+        }
+
+        .mascot-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            text-align: center;
+        }
+
+        .mascot-title {
+            font-family: 'Manrope', sans-serif;
+            font-size: 25px;
+            font-weight: 800;
+            color: #34385e;
+            margin-top: 30px;
+            margin-bottom: 9px;
+        }
+
+        .mascot-description {
+            color: #747895;
+            font-size: 14px;
+            line-height: 1.7;
+            max-width: 300px;
+            margin: auto;
+        }
+
+        .robot-area {
+            position: relative;
+            width: 280px;
+            height: 270px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .robot-shadow {
+            position: absolute;
+            width: 175px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(91, 89, 160, 0.17);
+            bottom: 12px;
+            filter: blur(9px);
+            animation: shadowMove 3s ease-in-out infinite;
+        }
+
+        .robot {
+            position: relative;
+            width: 165px;
+            height: 150px;
+            border-radius: 47px 47px 39px 39px;
+            background: linear-gradient(145deg, #ffffff, #dfe2ff);
+            border: 5px solid #b5b8ef;
+            box-shadow:
+                inset -8px -8px 15px rgba(112, 112, 190, 0.12),
+                0 18px 35px rgba(93, 91, 160, 0.2);
+            animation: robotFloat 3s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        .robot::before {
+            content: "";
+            position: absolute;
+            width: 9px;
+            height: 24px;
+            border-radius: 8px;
+            background: #a6a9e8;
+            top: -28px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .robot::after {
+            content: "";
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #9c91ef;
+            top: -39px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 16px rgba(156, 145, 239, 0.5);
+        }
+
+        .robot-ear {
+            position: absolute;
+            width: 18px;
+            height: 43px;
+            border-radius: 10px;
+            background: linear-gradient(180deg, #b6b8f2, #9298e1);
+            top: 52px;
+            z-index: -1;
+        }
+
+        .robot-ear.left {
+            left: -18px;
+        }
+
+        .robot-ear.right {
+            right: -18px;
+        }
+
+        .robot-face {
+            position: absolute;
+            inset: 24px 19px 22px;
+            border-radius: 30px;
+            background: linear-gradient(145deg, #454b78, #34395f);
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .eyes {
+            position: absolute;
+            top: 30px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 27px;
+        }
+
+        .eye {
+            width: 21px;
+            height: 24px;
+            border-radius: 50%;
+            background: #a9e7ff;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 12px rgba(125, 218, 255, 0.55);
+            transform-origin: center;
+            transition: height 0.12s ease;
+        }
+
+        .pupil {
+            position: absolute;
+            width: 8px;
+            height: 10px;
+            background: #ffffff;
+            border-radius: 50%;
+            top: 6px;
+            left: 7px;
+            transition: transform 0.08s linear;
+        }
+
+        .robot.blink .eye {
+            height: 3px;
+            margin-top: 10px;
+        }
+
+        .robot.mood-password .eye {
+            height: 3px;
+            margin-top: 10px;
+        }
+
+        .robot-mouth {
+            position: absolute;
+            width: 22px;
+            height: 9px;
+            border-bottom: 3px solid #a9e7ff;
+            border-radius: 0 0 20px 20px;
+            bottom: 19px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .cheek {
+            position: absolute;
+            width: 15px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 145, 184, 0.65);
+            top: 69px;
+        }
+
+        .cheek.left {
+            left: 8px;
+        }
+
+        .cheek.right {
+            right: 8px;
+        }
+
+        .robot-body {
+            position: absolute;
+            width: 80px;
+            height: 35px;
+            border-radius: 18px 18px 13px 13px;
+            background: linear-gradient(145deg, #c6c8fa, #a4a8ed);
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 7px 14px rgba(100, 99, 170, 0.15);
+        }
+
+        .robot-arm {
+            position: absolute;
+            width: 20px;
+            height: 42px;
+            border-radius: 12px;
+            background: #b4b7f0;
+            top: 88px;
+        }
+
+        .robot-arm.left {
+            left: -23px;
+            transform: rotate(20deg);
+        }
+
+        .robot-arm.right {
+            right: -23px;
+            transform: rotate(-20deg);
+        }
+
+        .floating-card {
+            position: absolute;
+            padding: 10px 14px;
+            border-radius: 13px;
+            background: rgba(255,255,255,0.83);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 8px 25px rgba(86, 88, 150, 0.1);
+            color: #565b89;
+            font-size: 11px;
+            font-weight: 700;
+            animation: cardFloat 4s ease-in-out infinite;
+        }
+
+        .floating-card.one {
+            top: 40px;
+            left: -3px;
+        }
+
+        .floating-card.two {
+            right: -12px;
+            top: 80px;
+            animation-delay: 1s;
+        }
+
+        .floating-card.three {
+            bottom: 28px;
+            right: 10px;
+            animation-delay: 1.8s;
+        }
+
+        .sparkle {
+            position: absolute;
+            color: #ffffff;
+            font-size: 22px;
+            animation: sparkle 2.5s ease-in-out infinite;
+        }
+
+        .sparkle.s1 {
+            top: 15px;
+            right: 65px;
+        }
+
+        .sparkle.s2 {
+            bottom: 55px;
+            left: 15px;
+            animation-delay: 1s;
+        }
+
+        @keyframes robotFloat {
+            0%, 100% { transform: translateY(0) rotate(-1deg); }
+            50% { transform: translateY(-10px) rotate(1deg); }
+        }
+
+        @keyframes shadowMove {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(0.85); opacity: 0.5; }
+        }
+
+        @keyframes cardFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-7px); }
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.35; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        @media (max-width: 850px) {
+            .main-card {
+                max-width: 520px;
+                grid-template-columns: 1fr;
+            }
+
+            .form-panel {
+                padding: 38px 35px;
+            }
+
+            .mascot-panel {
+                min-height: 390px;
+                padding: 25px;
+            }
+
+            .robot-area {
+                transform: scale(0.85);
+                margin-top: -15px;
+                margin-bottom: -20px;
+            }
+
+            .mascot-title {
+                font-size: 22px;
+                margin-top: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px 10px;
+            }
+
+            .form-panel {
+                padding: 30px 22px;
+            }
+
+            .heading {
+                font-size: 25px;
+            }
+
+            .mascot-panel {
+                min-height: 360px;
+            }
+
+            .robot-area {
+                transform: scale(0.75);
+                margin-top: -25px;
+                margin-bottom: -30px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="main-card">
+
+    <!-- REGISTRATION FORM -->
+
+    <section class="form-panel">
+
+        <div class="brand">
+            <div class="brand-logo">W</div>
+            <div class="brand-name">Workflow <span>AI</span></div>
+        </div>
+
+        <h1 class="heading">Create your account</h1>
+
+        <p class="subtitle">
+            Join Workflow AI and take your next step forward.
+        </p>
+
+        <form method="POST" action="{% url 'register' %}">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label" for="username">
+                    Username
+                </label>
+
+                <input
+                    type="text"
+                    class="form-control"
+                    id="username"
+                    name="username"
+                    placeholder="Choose a username"
+                    autocomplete="username"
+                    required
+                >
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="email">
+                    Email address
+                </label>
+
+                <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    name="email"
+                    placeholder="you@example.com"
+                    autocomplete="email"
+                    required
+                >
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="password">
+                    Password
+                </label>
+
+                <div class="password-wrapper">
+                    <input
+                        type="password"
+                        class="form-control"
+                        id="password"
+                        name="password"
+                        placeholder="Create a password"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="toggle-password"
+                        id="togglePassword"
+                    >
+                        Show
+                    </button>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">
+                    I want to register as
+                </label>
+
+                <div class="role-box">
+
+                    <div class="role-option">
+                        <input
+                            type="radio"
+                            id="student"
+                            name="role"
+                            value="student"
+                            checked
+                        >
+
+                        <label for="student">
+                            <span>🎓</span>
+                            Student
+                        </label>
+                    </div>
+
+                    <div class="role-option">
+                        <input
+                            type="radio"
+                            id="company"
+                            name="role"
+                            value="company"
+                        >
+
+                        <label for="company">
+                            <span>🏢</span>
+                            Company
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+
+            <button type="submit" class="create-btn">
+                Create Account →
+            </button>
+
+        </form>
+
+        <p class="login-text">
+            Already have an account?
+            <a href="{% url 'login' %}">Sign in</a>
+        </p>
+
+    </section>
+
+
+    <!-- MASCOT PANEL -->
+
+    <section class="mascot-panel">
+
+        <div class="mascot-content">
+
+            <div class="robot-area">
+
+                <div class="robot-shadow"></div>
+
+                <div class="floating-card one">
+                    ✨ Smart Opportunities
+                </div>
+
+                <div class="floating-card two">
+                    🚀 Career Growth
+                </div>
+
+                <div class="floating-card three">
+                    🤖 AI Assistant
+                </div>
+
+                <div class="sparkle s1">✦</div>
+                <div class="sparkle s2">✧</div>
+
+                <div class="robot" id="robot">
+
+                    <div class="robot-ear left"></div>
+                    <div class="robot-ear right"></div>
+
+                    <div class="robot-face">
+
+                        <div class="eyes">
+
+                            <div class="eye">
+                                <div class="pupil"></div>
+                            </div>
+
+                            <div class="eye">
+                                <div class="pupil"></div>
+                            </div>
+
+                        </div>
+
+                        <div class="cheek left"></div>
+                        <div class="cheek right"></div>
+
+                        <div class="robot-mouth"></div>
+
+                    </div>
+
+                    <div class="robot-arm left"></div>
+                    <div class="robot-arm right"></div>
+                    <div class="robot-body"></div>
+
+                </div>
+
+            </div>
+
+            <h2 class="mascot-title">
+                Your journey starts here!
+            </h2>
+
+            <p class="mascot-description">
+                Connect with opportunities, demonstrate your skills,
+                and build a smarter future with Workflow AI.
+            </p>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<script>
+    // Show / hide password
+
+    const passwordInput = document.getElementById("password");
+    const togglePassword = document.getElementById("togglePassword");
+    const robot = document.getElementById("robot");
+
+    togglePassword.addEventListener("click", function () {
+
+        const isHidden = passwordInput.type === "password";
+
+        passwordInput.type = isHidden ? "text" : "password";
+
+        togglePassword.textContent = isHidden ? "Hide" : "Show";
+
+    });
+
+
+    // Robot closes its eyes while password is being entered
+
+    passwordInput.addEventListener("focus", function () {
+        robot.classList.add("mood-password");
+    });
+
+    passwordInput.addEventListener("blur", function () {
+        robot.classList.remove("mood-password");
+    });
+
+
+    // Robot pupils follow the mouse pointer
+
+    document.addEventListener("mousemove", function (event) {
+
+        const eyes = document.querySelectorAll(".pupil");
+
+        eyes.forEach(function (pupil) {
+
+            const eye = pupil.parentElement;
+            const rect = eye.getBoundingClientRect();
+
+            const eyeX = rect.left + rect.width / 2;
+            const eyeY = rect.top + rect.height / 2;
+
+            const angle = Math.atan2(
+                event.clientY - eyeY,
+                event.clientX - eyeX
+            );
+
+            const distance = 4;
+
+            const x = Math.cos(angle) * distance;
+            const y = Math.sin(angle) * distance;
+
+            pupil.style.transform =
+                `translate(${x}px, ${y}px)`;
+
+        });
+
+    });
+
+
+    // Automatic blinking
+
+    function blinkRobot() {
+
+        if (!robot.classList.contains("mood-password")) {
+
+            robot.classList.add("blink");
+
+            setTimeout(function () {
+                robot.classList.remove("blink");
+            }, 150);
+
+        }
+
+        setTimeout(blinkRobot, 2800 + Math.random() * 1800);
+
+    }
+
+    setTimeout(blinkRobot, 1800);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Create Job - Workflow AI</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+</head>
+
+
+<body class="bg-light">
+
+
+<!-- Navigation -->
+
+<nav class="navbar navbar-expand-lg bg-white border-bottom">
+
+    <div class="container">
+
+        <a
+            class="navbar-brand fw-bold"
+            href="/"
+        >
+            Workflow AI
+        </a>
+
+
+        <div>
+
+            <a
+                href="/company/dashboard/"
+                class="btn btn-outline-success me-2"
+            >
+                Dashboard
+            </a>
+
+
+            <a
+                href="/accounts/logout/"
+                class="btn btn-outline-danger"
+            >
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- Create Job -->
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body p-4 p-md-5">
+
+
+                    <h1 class="fw-bold mb-2">
+                        Create a Job
+                    </h1>
+
+                    <p class="text-muted mb-4">
+                        Create a job opportunity and define the
+                        requirements students need to meet.
+                    </p>
+
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+
+                        <!-- Job Information -->
+
+                        <h4 class="fw-bold mb-3">
+                            Job Information
+                        </h4>
+
+
+                        <!-- Job Title -->
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-semibold">
+                                Job Title
+                            </label>
+
+                            <input
+                                type="text"
+                                name="title"
+                                class="form-control"
+                                placeholder="e.g. Python Developer"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- Description -->
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-semibold">
+                                Job Description
+                            </label>
+
+                            <textarea
+                                name="description"
+                                class="form-control"
+                                rows="5"
+                                placeholder="Describe the job responsibilities..."
+                                required
+                            ></textarea>
+
+                        </div>
+
+
+                        <!-- Location -->
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-semibold">
+                                Location
+                            </label>
+
+                            <input
+                                type="text"
+                                name="location"
+                                class="form-control"
+                                placeholder="e.g. Dehradun / Remote"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- Job Type -->
+
+                        <div class="mb-4">
+
+                            <label class="form-label fw-semibold">
+                                Job Type
+                            </label>
+
+                            <select
+                                name="job_type"
+                                class="form-select"
+                                required
+                            >
+
+                                <option value="">
+                                    Select Job Type
+                                </option>
+
+                                <option value="full_time">
+                                    Full Time
+                                </option>
+
+                                <option value="part_time">
+                                    Part Time
+                                </option>
+
+                                <option value="internship">
+                                    Internship
+                                </option>
+
+                                <option value="contract">
+                                    Contract
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- Compensation -->
+
+                        <h4 class="fw-bold mb-3">
+                            Compensation
+                        </h4>
+
+
+                        <div class="mb-4">
+
+                            <label class="form-label fw-semibold">
+                                Salary
+                            </label>
+
+                            <input
+                                type="text"
+                                name="salary"
+                                class="form-control"
+                                placeholder="e.g. ₹4-6 LPA"
+                            >
+
+                        </div>
+
+
+                        <!-- Requirements -->
+
+                        <h4 class="fw-bold mb-3">
+                            Student Requirements
+                        </h4>
+
+
+                        <!-- Degree -->
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-semibold">
+                                Required Degree
+                            </label>
+
+                            <input
+                                type="text"
+                                name="required_degree"
+                                class="form-control"
+                                placeholder="e.g. BCA / B.Tech"
+                            >
+
+                        </div>
+
+
+                        <!-- CGPA -->
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-semibold">
+                                Minimum CGPA
+                            </label>
+
+                            <input
+                                type="number"
+                                name="minimum_cgpa"
+                                class="form-control"
+                                step="0.01"
+                                min="0"
+                                max="10"
+                                placeholder="e.g. 7.00"
+                            >
+
+                        </div>
+
+
+                        <!-- Skills -->
+
+                        <div class="mb-4">
+
+                            <label class="form-label fw-semibold">
+                                Required Skills
+                            </label>
+
+                            <textarea
+                                name="required_skills"
+                                class="form-control"
+                                rows="4"
+                                placeholder="e.g. Python, Django, SQL, Machine Learning"
+                            ></textarea>
+
+                        </div>
+
+
+                        <!-- Deadline -->
+
+                        <h4 class="fw-bold mb-3">
+                            Application Deadline
+                        </h4>
+
+
+                        <div class="mb-4">
+
+                            <label class="form-label fw-semibold">
+                                Deadline
+                            </label>
+
+                            <input
+                                type="date"
+                                name="application_deadline"
+                                class="form-control"
+                            >
+
+                        </div>
+
+
+                        <!-- Buttons -->
+
+                        <div class="d-flex gap-2">
+
+                            <button
+                                type="submit"
+                                class="btn btn-success"
+                            >
+                                Create Job
+                            </button>
+
+
+                            <a
+                                href="/company/dashboard/"
+                                class="btn btn-secondary"
+                            >
+                                Cancel
+                            </a>
+
+                        </div>
+
+
+                
+
+
+                    </form>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</body>
+
+</html>

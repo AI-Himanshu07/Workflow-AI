@@ -1,0 +1,262 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Profile - Workflow AI</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+</head>
+
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg bg-white border-bottom">
+    <div class="container">
+
+        <a class="navbar-brand fw-bold" href="{% url 'home' %}">
+            Workflow AI
+        </a>
+
+        <a href="{% url 'logout' %}" class="btn btn-outline-danger">
+            Logout
+        </a>
+
+    </div>
+</nav>
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body p-4 p-md-5">
+
+                    <h1 class="fw-bold mb-2">
+                        Complete Your Profile
+                    </h1>
+
+                    <p class="text-muted mb-4">
+                        Add your details so Workflow AI can understand your
+                        profile and help you find suitable opportunities.
+                    </p>
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+                        <!-- Personal Information -->
+
+                        <h4 class="fw-bold mb-3">
+                            Personal Information
+                        </h4>
+
+                        <div class="mb-3">
+
+                            <label class="form-label">Full Name</label>
+
+                            <input
+                                type="text"
+                                name="full_name"
+                                class="form-control"
+                                value="{{ profile.full_name }}"
+                                placeholder="Enter your full name"
+                            >
+
+                        </div>
+
+                        <!-- Registered Email -->
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+                                Registered Email Address
+                            </label>
+
+                            <input
+                                type="email"
+                                name="email"
+                                class="form-control"
+                                value="{{ email_value|default:request.user.email }}"
+                                placeholder="Enter your real Gmail address"
+                                required
+                            >
+
+                            <div class="form-text">
+                                This email will be used for account recovery
+                                and password reset.
+                            </div>
+
+                            {% if email_error %}
+                                <div class="text-danger small mt-2">
+                                    {{ email_error }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+                        <div class="mb-4">
+
+                            <label class="form-label">
+                                Phone Number
+                            </label>
+
+                            <input
+                                type="text"
+                                name="phone"
+                                class="form-control"
+                                value="{{ profile.phone }}"
+                                placeholder="Enter your phone number"
+                            >
+
+                        </div>
+
+                        <!-- Education -->
+
+                        <h4 class="fw-bold mb-3">
+                            Education
+                        </h4>
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+                                College / University
+                            </label>
+
+                            <input
+                                type="text"
+                                name="college"
+                                class="form-control"
+                                value="{{ profile.college }}"
+                                placeholder="Enter your college"
+                            >
+
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label class="form-label">Degree</label>
+
+                            <input
+                                type="text"
+                                name="degree"
+                                class="form-control"
+                                value="{{ profile.degree }}"
+                                placeholder="Example: BCA"
+                            >
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-4">
+
+                                <label class="form-label">
+                                    Graduation Year
+                                </label>
+
+                                <input
+                                    type="number"
+                                    name="graduation_year"
+                                    class="form-control"
+                                    value="{{ profile.graduation_year|default:'' }}"
+                                    placeholder="Example: 2028"
+                                >
+
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+
+                                <label class="form-label">CGPA</label>
+
+                                <input
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                    max="10"
+                                    name="cgpa"
+                                    class="form-control"
+                                    value="{{ profile.cgpa|default:'' }}"
+                                    placeholder="Example: 8.50"
+                                >
+
+                            </div>
+
+                        </div>
+
+                        <!-- Skills -->
+
+                        <h4 class="fw-bold mb-3">
+                            Skills & Experience
+                        </h4>
+
+                        <div class="mb-3">
+
+                            <label class="form-label">Skills</label>
+
+                            <textarea
+                                name="skills"
+                                class="form-control"
+                                rows="4"
+                                placeholder="Example: Python, Django, SQL, HTML, CSS"
+                            >{{ profile.skills }}</textarea>
+
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label class="form-label">Projects</label>
+
+                            <textarea
+                                name="projects"
+                                class="form-control"
+                                rows="4"
+                                placeholder="Describe your projects"
+                            >{{ profile.projects }}</textarea>
+
+                        </div>
+
+                        <div class="mb-4">
+
+                            <label class="form-label">
+                                Certifications
+                            </label>
+
+                            <textarea
+                                name="certifications"
+                                class="form-control"
+                                rows="4"
+                                placeholder="Example: Python Certificate, Data Analytics Certificate"
+                            >{{ profile.certifications }}</textarea>
+
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary btn-lg w-100"
+                        >
+                            Save Profile
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

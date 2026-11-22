@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Profile | Workflow AI</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+        body {
+            background: #f5f7fb;
+            min-height: 100vh;
+        }
+
+        .profile-card {
+            border: none;
+            border-radius: 18px;
+        }
+
+        .info-box {
+            background: #f8faff;
+            border: 1px solid #e7edf7;
+            border-radius: 10px;
+            padding: 14px 16px;
+        }
+
+        .info-label {
+            color: #68778d;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            color: #263750;
+            margin-bottom: 0;
+            overflow-wrap: anywhere;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg bg-white border-bottom">
+    <div class="container">
+
+        <a class="navbar-brand fw-bold" href="/">
+            Workflow AI
+        </a>
+
+        <div>
+            {% if profile_role == 'admin' %}
+                <a href="{% url 'admin_dashboard' %}"
+                   class="btn btn-outline-primary me-2">
+                    Dashboard
+                </a>
+            {% else %}
+                <a href="{% url 'staff_dashboard' %}"
+                   class="btn btn-outline-primary me-2">
+                    Dashboard
+                </a>
+            {% endif %}
+
+            <a href="{% url 'logout' %}"
+               class="btn btn-outline-danger">
+                Logout
+            </a>
+        </div>
+
+    </div>
+</nav>
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+
+            <div class="card profile-card shadow-sm">
+                <div class="card-body p-4 p-md-5">
+
+                    <h1 class="fw-bold mb-2">My Profile</h1>
+
+                    <p class="text-muted mb-4">
+                        View and update your Workflow AI account information.
+                    </p>
+
+                    <h4 class="fw-bold mb-3">Account Information</h4>
+
+                    <div class="row g-3 mb-4">
+
+                        <div class="col-md-6">
+                            <div class="info-box">
+                                <div class="info-label">Username</div>
+                                <p class="info-value">
+                                    {{ request.user.username }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="info-box">
+                                <div class="info-label">Account Role</div>
+                                <p class="info-value">
+                                    {% if profile_role == 'admin' %}
+                                        Administrator
+                                    {% else %}
+                                        Staff
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <h4 class="fw-bold mb-3">Update Details</h4>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                First Name
+                            </label>
+
+                            <input
+                                type="text"
+                                name="first_name"
+                                class="form-control"
+                                value="{{ request.user.first_name }}"
+                            >
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                Last Name
+                            </label>
+
+                            <input
+                                type="text"
+                                name="last_name"
+                                class="form-control"
+                                value="{{ request.user.last_name }}"
+                            >
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                Registered Email
+                            </label>
+
+                            <input
+                                type="email"
+                                name="email"
+                                class="form-control"
+                                value="{{ email_value|default:request.user.email }}"
+                                required
+                            >
+
+                            {% if email_error %}
+                                <div class="text-danger small mt-2">
+                                    {{ email_error }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2">
+
+                            <button type="submit" class="btn btn-primary">
+                                Save Changes
+                            </button>
+
+                            {% if profile_role == 'admin' %}
+                                <a href="{% url 'admin_dashboard' %}"
+                                   class="btn btn-outline-secondary">
+                                    Back to Dashboard
+                                </a>
+                            {% else %}
+                                <a href="{% url 'staff_dashboard' %}"
+                                   class="btn btn-outline-secondary">
+                                    Back to Dashboard
+                                </a>
+                            {% endif %}
+
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

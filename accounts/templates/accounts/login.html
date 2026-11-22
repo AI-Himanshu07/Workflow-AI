@@ -1,0 +1,960 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Workflow AI</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * { box-sizing: border-box; }
+
+        :root {
+            --primary: #625ff0;
+            --primary-dark: #514bd5;
+            --text: #252743;
+            --muted: #9296ad;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 35px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(ellipse at 8% 12%, #dce6ff 0, transparent 34%),
+                radial-gradient(ellipse at 92% 85%, #e9ddff 0, transparent 35%),
+                #f7f8fd;
+        }
+
+        .login-shell {
+            width: 100%;
+            max-width: 1100px;
+            min-height: 680px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            overflow: hidden;
+            background: #fff;
+            border: 1px solid rgba(255,255,255,.9);
+            border-radius: 30px;
+            box-shadow: 0 30px 90px rgba(48, 55, 115, .13);
+        }
+
+        /* FORM */
+
+        .form-panel {
+            padding: 55px 65px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 55px;
+        }
+
+        .brand-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 15px;
+            display: grid;
+            place-items: center;
+            color: white;
+            font-family: 'Manrope', sans-serif;
+            font-size: 23px;
+            font-weight: 800;
+            background: linear-gradient(140deg, #6578f5, #8860e9);
+            box-shadow: 0 7px 18px rgba(100, 105, 230, .27);
+        }
+
+        .brand-name {
+            font-family: 'Manrope', sans-serif;
+            font-size: 21px;
+            font-weight: 800;
+            letter-spacing: -.7px;
+        }
+
+        .welcome-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            width: fit-content;
+            padding: 7px 12px;
+            margin-bottom: 16px;
+            border-radius: 30px;
+            color: #625fe0;
+            background: #f0efff;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+        }
+
+        .welcome-dot {
+            width: 7px;
+            height: 7px;
+            background: #7772ed;
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px #dedcff;
+        }
+
+        .heading {
+            margin: 0 0 10px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 37px;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+        }
+
+        .subtitle {
+            margin-bottom: 35px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .form-label {
+            margin-bottom: 9px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .form-control {
+            height: 54px;
+            padding: 0 16px;
+            border: 1px solid #e7e8f1;
+            border-radius: 13px;
+            background: #fbfbfe;
+            color: var(--text);
+            font-size: 14px;
+            box-shadow: none !important;
+            transition: .2s ease;
+        }
+
+        .form-control::placeholder {
+            color: #b2b5c5;
+        }
+
+        .form-control:focus {
+            border-color: #8582f2;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(103, 99, 239, .09) !important;
+        }
+
+        .password-wrap {
+            position: relative;
+        }
+
+        .password-wrap .form-control {
+            padding-right: 65px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        /* FORGOT PASSWORD */
+
+        .forgot-password {
+            display: block;
+            margin-top: 11px;
+            text-align: right;
+            color: #625ff0;
+            font-size: 12px;
+            font-weight: 800;
+            text-decoration: none;
+            transition: .2s ease;
+        }
+
+        .forgot-password:hover {
+            color: #514bd5;
+            text-decoration: underline;
+        }
+
+        .login-btn {
+            width: 100%;
+            height: 54px;
+            margin-top: 8px;
+            border: none;
+            border-radius: 13px;
+            color: white;
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: .2px;
+            background: linear-gradient(110deg, #5d70ed, #8060e8);
+            box-shadow: 0 10px 24px rgba(99, 100, 225, .25);
+            transition: .25s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 28px rgba(99, 100, 225, .33);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .register-text {
+            margin-top: 25px;
+            color: #9699ad;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .register-text a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 800;
+        }
+
+        .register-text a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            padding: 12px 15px;
+            margin-bottom: 18px;
+            border: 1px solid #ffd6dc;
+            border-radius: 11px;
+            background: #fff3f4;
+            color: #c53d55;
+            font-size: 13px;
+        }
+
+        .secure-note {
+            margin-top: 35px;
+            color: #a3a5b6;
+            text-align: center;
+            font-size: 11px;
+        }
+
+        /* VISUAL PANEL */
+
+        .visual-panel {
+            position: relative;
+            isolation: isolate;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 35px;
+            background: linear-gradient(145deg, #edf0ff, #f2ebff 65%, #e9edff);
+        }
+
+        .visual-panel::before {
+            content: "";
+            position: absolute;
+            width: 430px;
+            height: 430px;
+            top: -180px;
+            right: -180px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.55);
+            z-index: -1;
+        }
+
+        .visual-panel::after {
+            content: "";
+            position: absolute;
+            width: 380px;
+            height: 380px;
+            bottom: -210px;
+            left: -160px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.45);
+            z-index: -1;
+        }
+
+        .scene {
+            position: relative;
+            width: 350px;
+            height: 390px;
+            display: grid;
+            place-items: center;
+            z-index: 1;
+        }
+
+        .scene-glow {
+            position: absolute;
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(133,133,244,.22), transparent 70%);
+        }
+
+        /* ROBOT */
+
+        .robot {
+            position: relative;
+            width: 220px;
+            height: 280px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: robot-float 4s ease-in-out infinite;
+            z-index: 3;
+        }
+
+        .antenna {
+            position: relative;
+            width: 7px;
+            height: 29px;
+            margin-bottom: -2px;
+            border-radius: 10px;
+            background: #777ce0;
+        }
+
+        .antenna::before {
+            content: "";
+            position: absolute;
+            width: 17px;
+            height: 17px;
+            top: -10px;
+            left: -5px;
+            border-radius: 50%;
+            background: #ffb9d0;
+            box-shadow: 0 0 16px rgba(255,185,208,.9);
+            animation: antenna-pulse 2s ease-in-out infinite;
+        }
+
+        .robot-head {
+            position: relative;
+            width: 205px;
+            height: 166px;
+            display: grid;
+            place-items: center;
+            border: 4px solid rgba(255,255,255,.8);
+            border-radius: 47% 47% 43% 43%;
+            background: linear-gradient(145deg, #b6c5ff, #8589eb 75%);
+            box-shadow:
+                inset -10px -12px 20px rgba(65,69,165,.16),
+                inset 8px 8px 18px rgba(255,255,255,.65),
+                0 18px 35px rgba(92,96,191,.23);
+        }
+
+        .ear {
+            position: absolute;
+            top: 60px;
+            width: 24px;
+            height: 45px;
+            border-radius: 12px;
+            background: linear-gradient(145deg, #aab8fa, #777be0);
+            z-index: -1;
+        }
+
+        .ear-left { left: -15px; }
+        .ear-right { right: -15px; }
+
+        .face {
+            position: relative;
+            width: 158px;
+            height: 114px;
+            display: grid;
+            place-items: center;
+            border-radius: 42%;
+            background: linear-gradient(145deg, #fff, #e8ecff);
+            box-shadow: inset 0 3px 9px rgba(255,255,255,.95);
+        }
+
+        .eyes {
+            display: flex;
+            gap: 29px;
+            margin-top: -12px;
+        }
+
+        .eye {
+            position: relative;
+            width: 25px;
+            height: 34px;
+            overflow: hidden;
+            border-radius: 50%;
+            background: #343958;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,.18);
+        }
+
+        .pupil {
+            position: absolute;
+            width: 13px;
+            height: 17px;
+            top: 9px;
+            left: 6px;
+            border-radius: 50%;
+            background: #242944;
+            transition: transform .09s ease-out;
+        }
+
+        .pupil::after {
+            content: "";
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: white;
+        }
+
+        .eyelid {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            border-radius: 50%;
+            background: #edf0ff;
+            transform: translateY(-105%);
+            transition: transform .12s ease;
+        }
+
+        .eyes.blink .eyelid,
+        .eyes.password-mode .eyelid {
+            transform: translateY(0);
+        }
+
+        .mouth {
+            position: absolute;
+            bottom: 19px;
+            left: 50%;
+            width: 22px;
+            height: 10px;
+            border-bottom: 3px solid #7978b7;
+            border-radius: 0 0 50% 50%;
+            transform: translateX(-50%);
+        }
+
+        .cheek {
+            position: absolute;
+            bottom: 32px;
+            width: 17px;
+            height: 9px;
+            border-radius: 50%;
+            background: #ffb6cd;
+            opacity: .8;
+        }
+
+        .cheek-left { left: 12px; }
+        .cheek-right { right: 12px; }
+
+        .robot-body {
+            position: relative;
+            width: 137px;
+            height: 67px;
+            margin-top: -2px;
+            border: 4px solid rgba(255,255,255,.8);
+            border-radius: 24px 24px 35px 35px;
+            background: linear-gradient(145deg, #b2bfff, #797de3);
+            box-shadow: 0 12px 24px rgba(92,96,191,.2);
+        }
+
+        .robot-body::before {
+            content: "";
+            position: absolute;
+            top: 17px;
+            left: 47px;
+            width: 35px;
+            height: 10px;
+            border-radius: 20px;
+            background: rgba(255,255,255,.85);
+        }
+
+        .robot-body::after {
+            content: "";
+            position: absolute;
+            top: 35px;
+            left: 56px;
+            width: 17px;
+            height: 5px;
+            border-radius: 10px;
+            background: #d8ddff;
+        }
+
+        .robot-arm {
+            position: absolute;
+            top: 171px;
+            width: 24px;
+            height: 53px;
+            border: 3px solid rgba(255,255,255,.55);
+            border-radius: 20px;
+            background: #929bea;
+        }
+
+        .arm-left {
+            left: 12px;
+            transform: rotate(22deg);
+        }
+
+        .arm-right {
+            right: 12px;
+            transform: rotate(-22deg);
+        }
+
+        .robot-shadow {
+            position: absolute;
+            bottom: 36px;
+            width: 145px;
+            height: 17px;
+            border-radius: 50%;
+            background: rgba(80,82,160,.15);
+            filter: blur(8px);
+            animation: shadow-pulse 4s ease-in-out infinite;
+        }
+
+        /* FLOATING CARDS */
+
+        .float-card {
+            position: absolute;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 11px 14px;
+            border: 1px solid rgba(255,255,255,.9);
+            border-radius: 14px;
+            background: rgba(255,255,255,.9);
+            box-shadow: 0 12px 30px rgba(68,75,145,.12);
+            color: #505787;
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
+            backdrop-filter: blur(10px);
+        }
+
+        .float-icon {
+            width: 30px;
+            height: 30px;
+            display: grid;
+            place-items: center;
+            border-radius: 9px;
+            font-size: 15px;
+        }
+
+        .icon-ai { background: #eeedff; color: #7168e6; }
+        .icon-task { background: #e6f8f1; color: #37a982; }
+        .icon-progress { background: #fff1e7; color: #e79a5a; }
+
+        .card-ai {
+            top: 65px;
+            left: -5px;
+            animation: card-float 4s ease-in-out infinite;
+        }
+
+        .card-task {
+            top: 145px;
+            right: -12px;
+            animation: card-float 4.5s ease-in-out infinite reverse;
+        }
+
+        .card-progress {
+            bottom: 54px;
+            left: 0;
+            animation: card-float 4.2s ease-in-out infinite;
+        }
+
+        .sparkle {
+            position: absolute;
+            color: #9294eb;
+            font-size: 22px;
+            animation: sparkle 2.5s ease-in-out infinite;
+        }
+
+        .sparkle-one { top: 38px; right: 47px; }
+        .sparkle-two { bottom: 95px; right: 17px; animation-delay: .8s; }
+        .sparkle-three { top: 190px; left: 0; animation-delay: 1.3s; }
+
+        .visual-copy {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            margin-top: 0;
+        }
+
+        .visual-copy h2 {
+            margin-bottom: 9px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -.8px;
+        }
+
+        .visual-copy p {
+            max-width: 310px;
+            margin: auto;
+            color: #7e82a0;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .visual-tag {
+            display: inline-flex;
+            gap: 7px;
+            align-items: center;
+            margin-top: 19px;
+            padding: 8px 13px;
+            border: 1px solid rgba(255,255,255,.85);
+            border-radius: 30px;
+            background: rgba(255,255,255,.55);
+            color: #7773d4;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .5px;
+        }
+
+        /* ANIMATIONS */
+
+        @keyframes robot-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-9px); }
+        }
+
+        @keyframes shadow-pulse {
+            0%, 100% { transform: scaleX(1); opacity: .8; }
+            50% { transform: scaleX(.82); opacity: .5; }
+        }
+
+        @keyframes card-float {
+            0%, 100% { translate: 0 0; }
+            50% { translate: 0 -9px; }
+        }
+
+        @keyframes antenna-pulse {
+            0%, 100% { scale: .9; }
+            50% { scale: 1.15; }
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: .35; scale: .8; rotate: 0deg; }
+            50% { opacity: 1; scale: 1.2; rotate: 25deg; }
+        }
+
+        @media (max-width: 900px) {
+            .login-shell {
+                max-width: 560px;
+                grid-template-columns: 1fr;
+            }
+
+            .form-panel {
+                padding: 45px 45px;
+            }
+
+            .brand {
+                margin-bottom: 38px;
+            }
+
+            .visual-panel {
+                min-height: 590px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 15px 10px; }
+
+            .login-shell { border-radius: 22px; }
+
+            .form-panel { padding: 34px 25px; }
+
+            .heading { font-size: 31px; }
+
+            .visual-panel {
+                min-height: 500px;
+                padding: 20px 10px;
+            }
+
+            .scene {
+                transform: scale(.88);
+                margin: -15px 0;
+            }
+
+            .card-ai { left: -12px; }
+            .card-task { right: -12px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: .01ms !important;
+                transition-duration: .01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-shell">
+
+    <!-- LOGIN FORM -->
+
+    <section class="form-panel">
+
+        <div class="brand">
+            <div class="brand-icon">W</div>
+            <div class="brand-name">Workflow AI</div>
+        </div>
+
+        <div class="welcome-label">
+            <span class="welcome-dot"></span>
+            Welcome back
+        </div>
+
+        <h1 class="heading">Sign in to your account.</h1>
+
+        <p class="subtitle">
+            Your workspace is waiting. Continue where you left off.
+        </p>
+
+        {% if error %}
+            <div class="error-message">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="mb-4">
+                <label class="form-label" for="username">Username</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="username"
+                    name="username"
+                    placeholder="Enter your username"
+                    autocomplete="username"
+                    required
+                >
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label" for="password">Password</label>
+
+                <div class="password-wrap">
+                    <input
+                        type="password"
+                        class="form-control"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        id="togglePassword"
+                    >
+                        Show
+                    </button>
+                </div>
+
+                <!-- FORGOT PASSWORD LINK -->
+
+                <a
+                    href="{% url 'password_reset' %}"
+                    class="forgot-password"
+                >
+                    Forgot Password?
+                </a>
+
+            </div>
+
+            <button type="submit" class="login-btn">
+                Sign In to Workflow AI &nbsp; →
+            </button>
+        </form>
+
+        <p class="register-text">
+            Don't have an account?
+            <a href="{% url 'register' %}">Create an account</a>
+        </p>
+
+        <div class="secure-note">
+            ✦ &nbsp; Your workspace. Your progress. One place.
+        </div>
+
+    </section>
+
+
+    <!-- MASCOT PANEL -->
+
+    <section class="visual-panel">
+
+        <div class="scene">
+
+            <div class="scene-glow"></div>
+
+            <div class="sparkle sparkle-one">✦</div>
+            <div class="sparkle sparkle-two">✧</div>
+            <div class="sparkle sparkle-three">✦</div>
+
+            <div class="float-card card-ai">
+                <div class="float-icon icon-ai">✦</div>
+                AI Assistant
+            </div>
+
+            <div class="float-card card-task">
+                <div class="float-icon icon-task">✓</div>
+                Smart Tasks
+            </div>
+
+            <div class="float-card card-progress">
+                <div class="float-icon icon-progress">↗</div>
+                Progress
+            </div>
+
+            <div class="robot">
+
+                <div class="antenna"></div>
+
+                <div class="robot-head">
+
+                    <div class="ear ear-left"></div>
+                    <div class="ear ear-right"></div>
+
+                    <div class="face">
+
+                        <div class="eyes" id="eyes">
+
+                            <div class="eye">
+                                <div class="pupil" id="leftPupil"></div>
+                                <div class="eyelid"></div>
+                            </div>
+
+                            <div class="eye">
+                                <div class="pupil" id="rightPupil"></div>
+                                <div class="eyelid"></div>
+                            </div>
+
+                        </div>
+
+                        <div class="cheek cheek-left"></div>
+                        <div class="cheek cheek-right"></div>
+                        <div class="mouth"></div>
+
+                    </div>
+                </div>
+
+                <div class="robot-arm arm-left"></div>
+                <div class="robot-arm arm-right"></div>
+                <div class="robot-body"></div>
+
+            </div>
+
+            <div class="robot-shadow"></div>
+
+        </div>
+
+        <div class="visual-copy">
+            <h2>Make work flow.</h2>
+
+            <p>
+                Bring your tasks, opportunities and productivity
+                together with one intelligent workspace.
+            </p>
+
+            <div class="visual-tag">
+                ✦ &nbsp; PLAN SMARTER · DELIVER FASTER
+            </div>
+        </div>
+
+    </section>
+
+</div>
+
+
+<script>
+    const scene = document.querySelector(".scene");
+    const eyes = document.getElementById("eyes");
+
+    const leftPupil = document.getElementById("leftPupil");
+    const rightPupil = document.getElementById("rightPupil");
+
+    const passwordInput = document.getElementById("password");
+    const togglePassword = document.getElementById("togglePassword");
+
+    // Track the cursor with both pupils.
+    scene.addEventListener("pointermove", function(event) {
+
+        if (passwordInput === document.activeElement) return;
+
+        const rect = scene.getBoundingClientRect();
+
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+
+        const dx = (event.clientX - centerX) / (rect.width / 2);
+        const dy = (event.clientY - centerY) / (rect.height / 2);
+
+        const moveX = Math.max(-5, Math.min(5, dx * 5));
+        const moveY = Math.max(-4, Math.min(4, dy * 4));
+
+        const movement = `translate(${moveX}px, ${moveY}px)`;
+
+        leftPupil.style.transform = movement;
+        rightPupil.style.transform = movement;
+    });
+
+    // Look straight ahead when the pointer leaves.
+    scene.addEventListener("pointerleave", function() {
+        leftPupil.style.transform = "translate(0, 0)";
+        rightPupil.style.transform = "translate(0, 0)";
+    });
+
+    // Automatic blinking.
+    function blink() {
+
+        if (passwordInput !== document.activeElement) {
+            eyes.classList.add("blink");
+
+            setTimeout(function() {
+                eyes.classList.remove("blink");
+            }, 140);
+        }
+
+        setTimeout(blink, 2500 + Math.random() * 2500);
+    }
+
+    setTimeout(blink, 1600);
+
+    // Close eyes while password is being entered.
+    passwordInput.addEventListener("focus", function() {
+        eyes.classList.add("password-mode");
+    });
+
+    passwordInput.addEventListener("blur", function() {
+        eyes.classList.remove("password-mode");
+    });
+
+    // Show / hide password.
+    togglePassword.addEventListener("click", function() {
+
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            togglePassword.textContent = "Hide";
+        } else {
+            passwordInput.type = "password";
+            togglePassword.textContent = "Show";
+        }
+
+    });
+</script>
+
+</body>
+</html>

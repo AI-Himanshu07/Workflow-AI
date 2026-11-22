@@ -1,0 +1,260 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sent Messages | Workflow AI</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f5f6fc;
+            font-family: Arial, sans-serif;
+            color: #292d49;
+        }
+
+        .navbar {
+            background: #fff;
+            border-bottom: 1px solid #e9eaf2;
+        }
+
+        .brand {
+            color: #6558c8;
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .page-title {
+            font-weight: 800;
+        }
+
+        .main-card {
+            background: white;
+            border: 1px solid #e9eaf2;
+            border-radius: 18px;
+            padding: 25px;
+        }
+
+        .message-card {
+            background: white;
+            border: 1px solid #e9eaf2;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 14px;
+            transition: 0.2s;
+        }
+
+        .message-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(60, 60, 100, 0.07);
+        }
+
+        .subject {
+            color: #5146a7;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .recipient {
+            color: #626780;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #6d60ce;
+            border-color: #6d60ce;
+        }
+
+        .btn-primary:hover {
+            background: #584bb7;
+            border-color: #584bb7;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 10px 13px;
+        }
+
+        .status-pill {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin: 3px;
+        }
+
+        .read {
+            background: #e6f7ed;
+            color: #23834c;
+        }
+
+        .unread {
+            background: #fff1dd;
+            color: #a5670b;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 65px 15px;
+            color: #85899d;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="container d-flex align-items-center">
+        <a href="/" class="navbar-brand brand">Workflow AI</a>
+
+        <div class="ms-auto d-flex gap-2">
+            <a href="{% url 'message_inbox' %}" class="btn btn-sm btn-outline-primary">
+                Inbox
+            </a>
+
+            <a href="{% url 'sent_messages' %}" class="btn btn-sm btn-primary">
+                Sent
+            </a>
+
+            <a href="{% url 'send_message' %}" class="btn btn-sm btn-outline-primary">
+                Compose
+            </a>
+        </div>
+    </div>
+</nav>
+
+
+<div class="container py-5">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+
+        <div>
+            <h2 class="page-title mb-1">Sent Messages</h2>
+            <p class="text-secondary mb-0">
+                Keep track of the messages you've sent.
+            </p>
+        </div>
+
+        <a href="{% url 'send_message' %}" class="btn btn-primary px-4">
+            + Compose Message
+        </a>
+
+    </div>
+
+
+    <div class="main-card">
+
+        <form method="GET" class="row g-2 mb-4">
+
+            <div class="col-md-9">
+                <input
+                    type="text"
+                    name="q"
+                    class="form-control"
+                    placeholder="Search subject, message or recipient..."
+                    value="{{ search }}"
+                >
+            </div>
+
+            <div class="col-md-3 d-grid">
+                <button type="submit" class="btn btn-primary">
+                    Search
+                </button>
+            </div>
+
+        </form>
+
+
+        {% for item in sent_messages %}
+
+            <div class="message-card">
+
+                <div class="d-flex flex-wrap justify-content-between gap-3">
+
+                    <div class="flex-grow-1">
+
+                        <div class="subject">
+                            {{ item.subject }}
+                        </div>
+
+                        <p class="text-secondary mt-2 mb-2">
+                            {{ item.body|truncatechars:150 }}
+                        </p>
+
+                        <small class="text-secondary">
+                            Sent on {{ item.created_at|date:"d M Y, h:i A" }}
+                        </small>
+
+                        <div class="mt-3">
+                            <strong class="small">Recipients:</strong>
+
+                            <div class="mt-1">
+                                {% for recipient_item in item.recipients.all %}
+                                    <span class="recipient me-2">
+                                        {{ recipient_item.recipient.username }}
+                                    </span>
+
+                                    {% if recipient_item.is_read %}
+                                        <span class="status-pill read">Read</span>
+                                    {% else %}
+                                        <span class="status-pill unread">Unread</span>
+                                    {% endif %}
+                                {% empty %}
+                                    <span class="text-secondary small">
+                                        No recipients
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div>
+                        {% if item.message_type == 'interview' %}
+                            <span class="badge bg-info-subtle text-info">
+                                Interview
+                            </span>
+                        {% elif item.message_type == 'announcement' %}
+                            <span class="badge bg-primary-subtle text-primary">
+                                Announcement
+                            </span>
+                        {% else %}
+                            <span class="badge bg-light text-secondary">
+                                {{ item.get_message_type_display }}
+                            </span>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <div class="empty-state">
+                <h5>No sent messages yet</h5>
+                <p class="mb-3">
+                    Messages you send will appear here.
+                </p>
+
+                <a href="{% url 'send_message' %}" class="btn btn-primary">
+                    Send Your First Message
+                </a>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+    <div class="mt-4">
+        <a href="/" class="text-decoration-none text-secondary">
+            ← Back to Home
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>

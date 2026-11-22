@@ -1,164 +1,1080 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Workflow AI</title>
+    <title>Workflow AI | Smarter Hiring & Career Growth</title>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <style>
+        :root {
+            --primary: #6258e8;
+            --primary-dark: #4940c9;
+            --blue: #398be7;
+            --ink: #18213b;
+            --muted: #6f7890;
+            --surface: #f7f8ff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--ink);
+            background: #fff;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* NAVBAR */
+
+        .navbar {
+            padding: 17px 0;
+            background: rgba(255,255,255,.94);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid #eef0f8;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Manrope', sans-serif;
+            font-weight: 800;
+            font-size: 22px;
+            letter-spacing: -1px;
+            color: var(--ink);
+        }
+
+        .brand:hover {
+            color: var(--ink);
+        }
+
+        .brand-symbol {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: linear-gradient(145deg, #7569f5, #398be7);
+            box-shadow: 0 6px 15px #6258e833;
+        }
+
+        .brand-symbol svg {
+            width: 27px;
+            height: 27px;
+        }
+
+        .brand-ai {
+            color: var(--primary);
+        }
+
+        .nav-link {
+            color: #59627a;
+            font-weight: 600;
+            margin: 0 10px;
+            transition: .2s;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .btn-main {
+            background: var(--primary);
+            color: white;
+            border: 0;
+            padding: 12px 25px;
+            border-radius: 12px;
+            font-weight: 700;
+            transition: .25s;
+        }
+
+        .btn-main:hover {
+            background: var(--primary-dark);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px #6258e844;
+        }
+
+        /* HERO */
+
+        .hero {
+            position: relative;
+            padding: 100px 0 95px;
+            background:
+                radial-gradient(circle at 85% 25%, #e7e5ff 0, transparent 30%),
+                radial-gradient(circle at 10% 80%, #e9f5ff 0, transparent 30%),
+                #fbfbff;
+            overflow: hidden;
+        }
+
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: #eeedff;
+            color: var(--primary);
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 800;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            font-family: 'Manrope', sans-serif;
+            font-size: clamp(42px, 5.4vw, 68px);
+            line-height: 1.12;
+            letter-spacing: -3px;
+            font-weight: 800;
+            margin-bottom: 23px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(100deg, #6258e8, #9b63df, #398be7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero-description {
+            color: var(--muted);
+            font-size: 17px;
+            line-height: 1.85;
+            max-width: 540px;
+            margin-bottom: 30px;
+        }
+
+        .explore-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--ink);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 13px;
+            font-weight: 700;
+            transition: .25s;
+        }
+
+        .explore-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .hero-note {
+            color: #8b92a5;
+            font-size: 13px;
+            margin-top: 19px;
+        }
+
+        /* WORKFLOW HERO VISUAL */
+
+        .visual-area {
+            min-height: 440px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .visual-glow {
+            position: absolute;
+            width: 340px;
+            height: 340px;
+            border-radius: 50%;
+            background: #8378f5;
+            opacity: .12;
+            filter: blur(55px);
+        }
+
+        .orbit {
+            position: absolute;
+            width: 355px;
+            height: 355px;
+            border: 1px solid #c9c5ff;
+            border-radius: 50%;
+            animation: rotateOrbit 28s linear infinite;
+        }
+
+        .orbit-dot {
+            position: absolute;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: #7061ed;
+            box-shadow: 0 0 18px #7061ed88;
+        }
+
+        .orbit-dot.one {
+            top: 42px;
+            left: 65px;
+        }
+
+        .orbit-dot.two {
+            right: 35px;
+            bottom: 75px;
+            background: #48b8e9;
+            box-shadow: 0 0 18px #48b8e988;
+        }
+
+        .workflow-visual {
+            position: relative;
+            width: 285px;
+            height: 285px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 35px;
+            background: linear-gradient(145deg, #8c80fa, #6255e4 55%, #397fe4);
+            box-shadow:
+                0 35px 80px #6458e855,
+                inset 0 2px 10px #ffffff66,
+                inset -12px -15px 30px #2920a833;
+            transform: rotate(-7deg);
+            animation: heroFloat 5s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        .workflow-visual svg {
+            width: 205px;
+            height: 205px;
+            overflow: visible;
+        }
+
+        .workflow-visual .node {
+            fill: white;
+            stroke: white;
+            stroke-width: 2;
+        }
+
+        .workflow-visual .connector {
+            fill: none;
+            stroke: rgba(255,255,255,.9);
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .workflow-visual .node-center {
+            fill: #7061ed;
+        }
+
+        .floating-card {
+            position: absolute;
+            background: white;
+            padding: 16px 19px;
+            border-radius: 17px;
+            box-shadow: 0 18px 45px #303b6718;
+            animation: cardFloat 5s ease-in-out infinite;
+            z-index: 3;
+        }
+
+        .floating-card strong {
+            display: block;
+            font-size: 14px;
+            color: var(--ink);
+        }
+
+        .floating-card small {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .card-one {
+            top: 45px;
+            right: -5px;
+        }
+
+        .card-two {
+            bottom: 50px;
+            left: 0;
+            animation-delay: 1s;
+        }
+
+        .card-three {
+            bottom: 10px;
+            right: 0;
+            animation-delay: 2s;
+        }
+
+        .mini-icon {
+            display: inline-flex;
+            width: 35px;
+            height: 35px;
+            align-items: center;
+            justify-content: center;
+            background: #efedff;
+            color: var(--primary);
+            border-radius: 10px;
+            margin-right: 7px;
+            font-size: 17px;
+        }
+
+        @keyframes heroFloat {
+            0%, 100% {
+                transform: translateY(0) rotate(-7deg);
+            }
+
+            50% {
+                transform: translateY(-15px) rotate(-3deg);
+            }
+        }
+
+        @keyframes cardFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+
+        @keyframes rotateOrbit {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* GENERAL SECTIONS */
+
+        .section {
+            padding: 90px 0;
+        }
+
+        .section-label {
+            color: var(--primary);
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 13px;
+        }
+
+        .section-heading {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 800;
+            font-size: clamp(30px, 4vw, 43px);
+            letter-spacing: -1.5px;
+        }
+
+        .section-subtitle {
+            color: var(--muted);
+            max-width: 620px;
+            margin: 15px auto 0;
+            line-height: 1.8;
+        }
+
+        /* FEATURES */
+
+        .feature-card {
+            height: 100%;
+            padding: 29px;
+            border: 1px solid #eceefa;
+            border-radius: 19px;
+            background: white;
+            transition: .3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 20px 45px #27335c12;
+            border-color: #d6d2ff;
+        }
+
+        .feature-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #efedff;
+            font-size: 23px;
+            margin-bottom: 22px;
+        }
+
+        .feature-card h5 {
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.8;
+            margin: 0;
+        }
+
+        /* HOW IT WORKS */
+
+        .workflow-section {
+            background: var(--surface);
+        }
+
+        .step-card {
+            text-align: center;
+            padding: 28px 20px;
+        }
+
+        .step-number {
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            background: #e9e7ff;
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 19px;
+            margin: 0 auto 20px;
+        }
+
+        .step-card h5 {
+            font-weight: 800;
+        }
+
+        .step-card p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        /* STUDENT AND COMPANY */
+
+        .role-card {
+            padding: 38px;
+            border-radius: 23px;
+            height: 100%;
+            background: white;
+            border: 1px solid #eceefa;
+            transition: .3s;
+        }
+
+        .role-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 22px 50px #26345c12;
+        }
+
+        .role-icon {
+            font-size: 38px;
+            margin-bottom: 20px;
+        }
+
+        .role-card h3 {
+            font-weight: 800;
+            margin-bottom: 13px;
+        }
+
+        .role-card p {
+            color: var(--muted);
+            line-height: 1.8;
+        }
+
+        .role-card .btn {
+            margin-top: 12px;
+        }
+
+        .student-role {
+            background: linear-gradient(145deg, #f1f0ff, #fff);
+        }
+
+        .company-role {
+            background: linear-gradient(145deg, #edf8ff, #fff);
+        }
+
+        /* FINAL CTA */
+
+        .bottom-cta {
+            padding: 75px 30px;
+            border-radius: 25px;
+            text-align: center;
+            background: linear-gradient(120deg, #5449d4, #8275ed);
+            color: white;
+        }
+
+        .bottom-cta h2 {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 800;
+            font-size: clamp(28px, 4vw, 42px);
+        }
+
+        .bottom-cta p {
+            color: #e8e6ff;
+            margin: 15px 0 25px;
+        }
+
+        .bottom-cta a {
+            display: inline-block;
+            background: white;
+            color: var(--primary);
+            padding: 13px 25px;
+            border-radius: 12px;
+            font-weight: 800;
+            transition: .25s;
+        }
+
+        .bottom-cta a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px #3025a444;
+        }
+
+        /* FOOTER */
+
+        footer {
+            padding: 30px 0;
+            border-top: 1px solid #edf0f7;
+            color: #8991a5;
+            font-size: 13px;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 991px) {
+            .hero {
+                padding: 75px 0;
+            }
+
+            .visual-area {
+                margin-top: 35px;
+                min-height: 400px;
+            }
+
+            .orbit {
+                width: 310px;
+                height: 310px;
+            }
+
+            .workflow-visual {
+                width: 245px;
+                height: 245px;
+            }
+
+            .workflow-visual svg {
+                width: 180px;
+                height: 180px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .brand {
+                font-size: 20px;
+            }
+
+            .hero h1 {
+                letter-spacing: -2px;
+            }
+
+            .visual-area {
+                min-height: 340px;
+            }
+
+            .workflow-visual {
+                width: 185px;
+                height: 185px;
+                border-radius: 28px;
+            }
+
+            .workflow-visual svg {
+                width: 140px;
+                height: 140px;
+            }
+
+            .orbit {
+                width: 250px;
+                height: 250px;
+            }
+
+            .floating-card {
+                padding: 11px 12px;
+            }
+
+            .floating-card strong {
+                font-size: 11px;
+            }
+
+            .floating-card small {
+                font-size: 10px;
+            }
+
+            .card-one {
+                top: 10px;
+                right: 0;
+            }
+
+            .card-two {
+                bottom: 25px;
+                left: 0;
+            }
+
+            .card-three {
+                bottom: 0;
+                right: 0;
+            }
+
+            .section {
+                padding: 65px 0;
+            }
+
+            .role-card {
+                padding: 28px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-    <!-- Navigation Bar -->
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
 
-    <nav class="navbar navbar-expand-lg bg-white border-bottom">
+        <a class="brand" href="{% url 'home' %}">
+            <span class="brand-symbol">
+                <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+                    <path d="M12 13 L35 13 L35 35 L13 35 L13 24 L24 24"
+                          stroke="white" stroke-width="3.5"
+                          stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="12" cy="13" r="5" fill="white"/>
+                    <circle cx="35" cy="13" r="5" fill="white"/>
+                    <circle cx="35" cy="35" r="5" fill="white"/>
+                    <circle cx="13" cy="35" r="5" fill="white"/>
+                    <circle cx="24" cy="24" r="4" fill="#b8d9ff"/>
+                </svg>
+            </span>
 
-        <div class="container">
+            <span>
+                Workflow<span class="brand-ai">AI.</span>
+            </span>
+        </a>
 
-            <a class="navbar-brand fw-bold" href="#">
-                Workflow AI
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse" data-bs-target="#mainNav"
+                aria-controls="mainNav" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNav">
+
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#features">Features</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#how-it-works">How it works</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#users">Who it's for</a>
+                </li>
+            </ul>
+
+            <a href="{% url 'login' %}" class="btn-main">
+                Login
             </a>
 
-            <div>
+        </div>
+    </div>
+</nav>
 
-                <a href="#" class="btn btn-outline-primary me-2">
-                    Login
+
+<!-- HERO -->
+<section class="hero">
+    <div class="container">
+
+        <div class="row align-items-center">
+
+            <div class="col-lg-6">
+
+                <div class="hero-tag">
+                    <span>✦</span>
+                    Intelligent workflow platform
+                </div>
+
+                <h1>
+                    Better hiring.<br>
+                    <span class="gradient-text">Smarter decisions.</span>
+                </h1>
+
+                <p class="hero-description">
+                    Bring students, companies and opportunities together.
+                    Discover jobs, assess skills and manage the hiring journey
+                    through one intelligent platform.
+                </p>
+
+                <a href="#features" class="explore-btn">
+                    Explore Workflow AI
+                    <span>→</span>
                 </a>
 
-                <a href="#" class="btn btn-primary">
-                    Get Started
-                </a>
+                <div class="hero-note">
+                    Plan Smarter • Organize Better • Deliver Faster
+                </div>
+
+            </div>
+
+            <div class="col-lg-6">
+
+                <div class="visual-area">
+
+                    <div class="visual-glow"></div>
+
+                    <div class="orbit">
+                        <span class="orbit-dot one"></span>
+                        <span class="orbit-dot two"></span>
+                    </div>
+
+                    <div class="workflow-visual">
+
+                        <svg viewBox="0 0 200 200" fill="none" aria-hidden="true">
+
+                            <!-- Connecting workflow paths -->
+                            <path class="connector"
+                                  d="M60 55 H140 V145 H60 V105 H100"/>
+
+                            <!-- Top left node -->
+                            <rect class="node" x="43" y="38"
+                                  width="34" height="34" rx="10"/>
+                            <circle class="node-center" cx="60" cy="55" r="6"/>
+
+                            <!-- Top right node -->
+                            <rect class="node" x="123" y="38"
+                                  width="34" height="34" rx="10"/>
+                            <circle class="node-center" cx="140" cy="55" r="6"/>
+
+                            <!-- Bottom right node -->
+                            <rect class="node" x="123" y="128"
+                                  width="34" height="34" rx="10"/>
+                            <circle class="node-center" cx="140" cy="145" r="6"/>
+
+                            <!-- Bottom left node -->
+                            <rect class="node" x="43" y="88"
+                                  width="34" height="34" rx="10"/>
+                            <circle class="node-center" cx="60" cy="105" r="6"/>
+
+                            <!-- Central connection -->
+                            <circle cx="100" cy="105" r="19"
+                                    fill="#ffffff" fill-opacity=".20"
+                                    stroke="white" stroke-width="2"/>
+                            <path d="M91 105 H109 M100 96 V114"
+                                  stroke="white" stroke-width="3"
+                                  stroke-linecap="round"/>
+
+                        </svg>
+
+                    </div>
+
+                    <div class="floating-card card-one">
+                        <strong>
+                            <span class="mini-icon">✓</span>
+                            Smart assessment
+                        </strong>
+                        <small>Evaluate skills with confidence</small>
+                    </div>
+
+                    <div class="floating-card card-two">
+                        <strong>
+                            <span class="mini-icon">↗</span>
+                            Career opportunities
+                        </strong>
+                        <small>Find the right opportunity</small>
+                    </div>
+
+                    <div class="floating-card card-three">
+                        <strong>
+                            <span class="mini-icon">★</span>
+                            Better hiring
+                        </strong>
+                        <small>Organized recruitment workflow</small>
+                    </div>
+
+                </div>
 
             </div>
 
         </div>
-
-    </nav>
-
-
-    <!-- Hero Section -->
-
-    <section class="container text-center py-5">
-
-        <div class="py-5">
-
-            <h1 class="display-3 fw-bold">
-                Plan Smarter.<br>
-                Organize Better.<br>
-                Deliver Faster.
-            </h1>
-
-            <p class="lead mt-4">
-                Workflow AI helps you manage projects, tasks and workflows
-                intelligently with the power of AI.
-            </p>
-
-            <a href="#" class="btn btn-primary btn-lg mt-3">
-                Get Started
-            </a>
-
-        </div>
-
-    </section>
-
-    <!-- Features Section -->
-
-<section class="container py-5">
-
-    <div class="text-center mb-5">
-
-        <h2 class="fw-bold">
-            Everything you need to work smarter
-        </h2>
-
-        <p class="text-muted">
-            Manage your work, organize your projects and let AI help you plan.
-        </p>
-
     </div>
-
-
-    <div class="row g-4">
-
-        <!-- Project Management -->
-
-        <div class="col-md-4">
-
-            <div class="card h-100 shadow-sm">
-
-                <div class="card-body text-center p-4">
-
-                    <h3 class="h4">
-                        Project Management
-                    </h3>
-
-                    <p class="text-muted">
-                        Create and manage your projects in one organized place.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- Task Management -->
-
-        <div class="col-md-4">
-
-            <div class="card h-100 shadow-sm">
-
-                <div class="card-body text-center p-4">
-
-                    <h3 class="h4">
-                        Task Management
-                    </h3>
-
-                    <p class="text-muted">
-                        Organize tasks, track progress and stay on top of your work.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- AI Workflow Planner -->
-
-        <div class="col-md-4">
-
-            <div class="card h-100 shadow-sm">
-
-                <div class="card-body text-center p-4">
-
-                    <h3 class="h4">
-                        AI Workflow Planner
-                    </h3>
-
-                    <p class="text-muted">
-                        Turn your ideas into structured projects, tasks and plans.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
 </section>
 
-</body>
 
+<!-- FEATURES -->
+<section class="section" id="features">
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <div class="section-label">What you can do</div>
+
+            <h2 class="section-heading">
+                Everything in one workflow
+            </h2>
+
+            <p class="section-subtitle">
+                A connected platform that helps students discover opportunities
+                and helps companies organize recruitment efficiently.
+            </p>
+
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon">💼</div>
+                    <h5>Job Management</h5>
+                    <p>
+                        Companies can publish job openings and manage
+                        their recruitment opportunities in one place.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon">🎓</div>
+                    <h5>Student Opportunities</h5>
+                    <p>
+                        Students can explore openings, review eligibility
+                        requirements and apply for suitable jobs.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h5>Skill Assessments</h5>
+                    <p>
+                        Companies can create assessments and evaluate
+                        applicants through objective questions.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h5>Applicant Ranking</h5>
+                    <p>
+                        Compare applicants using assessment performance
+                        and relevant candidate information.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h5>Hiring Workflow</h5>
+                    <p>
+                        Manage application progress through applied,
+                        shortlisted, selected and rejected stages.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon">📁</div>
+                    <h5>Application Tracking</h5>
+                    <p>
+                        Students can keep track of their applications
+                        and follow their recruitment progress.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- HOW IT WORKS -->
+<section class="section workflow-section" id="how-it-works">
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <div class="section-label">Simple process</div>
+
+            <h2 class="section-heading">
+                How Workflow AI works
+            </h2>
+
+            <p class="section-subtitle">
+                A simple journey from creating an opportunity
+                to making smarter hiring decisions.
+            </p>
+
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-3">
+                <div class="step-card">
+                    <div class="step-number">01</div>
+                    <h5>Create an account</h5>
+                    <p>Join as a student or a company and set up your profile.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="step-card">
+                    <div class="step-number">02</div>
+                    <h5>Discover opportunities</h5>
+                    <p>Explore job openings and review eligibility requirements.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="step-card">
+                    <div class="step-number">03</div>
+                    <h5>Assess skills</h5>
+                    <p>Complete assessments and evaluate candidate performance.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="step-card">
+                    <div class="step-number">04</div>
+                    <h5>Move forward</h5>
+                    <p>Track applications and manage the hiring process.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- USERS -->
+<section class="section" id="users">
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <div class="section-label">Get involved</div>
+
+            <h2 class="section-heading">
+                One platform. Two journeys.
+            </h2>
+
+            <p class="section-subtitle">
+                Whether you are building your career or finding the right talent,
+                Workflow AI gives you a place to move forward.
+            </p>
+
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-lg-6">
+                <div class="role-card student-role">
+
+                    <div class="role-icon">🎓</div>
+
+                    <h3>For Students</h3>
+
+                    <p>
+                        Build your profile, discover relevant job opportunities,
+                        apply for openings and demonstrate your skills through
+                        assessments.
+                    </p>
+
+                    <a href="{% url 'register' %}" class="btn-main">
+                        Join as Student →
+                    </a>
+
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="role-card company-role">
+
+                    <div class="role-icon">🏢</div>
+
+                    <h3>For Companies</h3>
+
+                    <p>
+                        Create job openings, manage applications, conduct
+                        skill assessments and organize your candidate
+                        selection workflow.
+                    </p>
+
+                    <a href="{% url 'register' %}" class="btn-main">
+                        Join as Company →
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- FINAL CTA -->
+<section class="pb-5">
+    <div class="container">
+
+        <div class="bottom-cta">
+
+            <h2>Make your next move smarter.</h2>
+
+            <p>
+                Discover a better way to connect opportunities, skills and hiring.
+            </p>
+
+            <a href="#users">
+                Choose Your Journey →
+            </a>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer>
+    <div class="container d-flex flex-wrap justify-content-between gap-2">
+        <span>© {% now "Y" %} Workflow AI. All rights reserved.</span>
+        <span>Plan Smarter • Organize Better • Deliver Faster</span>
+    </div>
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
 </html>

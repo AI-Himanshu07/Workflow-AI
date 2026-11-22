@@ -1,0 +1,429 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications | Workflow AI</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f5f6ff;
+            font-family: Arial, sans-serif;
+            color: #252447;
+        }
+
+        .navbar {
+            background: white;
+            padding: 16px 7%;
+            box-shadow: 0 3px 15px rgba(40, 35, 100, 0.06);
+        }
+
+        .brand {
+            font-size: 22px;
+            font-weight: 800;
+            color: #6255c7;
+            text-decoration: none;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 9px 15px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .home-button {
+            background: #ffffff;
+            border: 1px solid #e5e3f3;
+            color: #55536e;
+        }
+
+        .home-button:hover {
+            background: #f4f2ff;
+            border-color: #c9c2f5;
+            color: #6255c7;
+            transform: translateY(-1px);
+        }
+
+        .dashboard-button {
+            background: #7164d9;
+            border: 1px solid #7164d9;
+            color: white;
+        }
+
+        .dashboard-button:hover {
+            background: #5c50bd;
+            border-color: #5c50bd;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .logout-button {
+            background: #fff1f1;
+            border: 1px solid #f5dada;
+            color: #d64b5a;
+        }
+
+        .logout-button:hover {
+            background: #d95362;
+            border-color: #d95362;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .page-container {
+            max-width: 1050px;
+            margin: 45px auto;
+            padding: 0 18px;
+        }
+
+        .header-card {
+            background: linear-gradient(120deg, #7164d9, #9385eb);
+            color: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 25px rgba(99, 85, 199, 0.16);
+        }
+
+        .notification-card {
+            background: white;
+            border: 1px solid #ecebfa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 14px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            transition: 0.2s;
+        }
+
+        .notification-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(60, 50, 130, 0.07);
+        }
+
+        .notification-card.unread {
+            border-left: 5px solid #7164d9;
+            background: #fcfbff;
+        }
+
+        .notification-icon {
+            width: 45px;
+            height: 45px;
+            min-width: 45px;
+            border-radius: 13px;
+            background: #efedff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+        }
+
+        .notification-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .notification-message {
+            color: #77758d;
+            font-size: 14px;
+            margin-bottom: 9px;
+            line-height: 1.6;
+        }
+
+        .notification-time {
+            color: #a09eb1;
+            font-size: 12px;
+        }
+
+        .unread-badge {
+            background: #eeeaff;
+            color: #6255c7;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .read-button {
+            border: 1px solid #dedaf9;
+            background: white;
+            color: #6255c7;
+            border-radius: 8px;
+            padding: 7px 11px;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .read-button:hover {
+            background: #7164d9;
+            color: white;
+        }
+
+        .empty-state {
+            background: white;
+            border-radius: 18px;
+            padding: 65px 20px;
+            text-align: center;
+            border: 1px solid #ecebfa;
+        }
+
+        .empty-icon {
+            font-size: 45px;
+            margin-bottom: 15px;
+        }
+
+        .btn-purple {
+            background: #7164d9;
+            color: white;
+            border: none;
+            border-radius: 9px;
+            padding: 10px 17px;
+        }
+
+        .btn-purple:hover {
+            background: #5c50bd;
+            color: white;
+        }
+
+        @media(max-width: 600px) {
+            .navbar {
+                padding: 14px 4%;
+            }
+
+            .nav-actions {
+                width: 100%;
+                gap: 7px;
+            }
+
+            .nav-button {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+
+            .notification-card {
+                flex-wrap: wrap;
+            }
+
+            .read-button {
+                margin-left: 60px;
+            }
+
+            .header-card {
+                padding: 23px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="container-fluid">
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 w-100">
+
+            <a href="/" class="brand">Workflow AI</a>
+
+            <div class="nav-actions">
+
+                {% if request.user.is_superuser %}
+
+                    <a href="{% url 'admin_dashboard' %}" class="nav-button dashboard-button">
+                        <span>←</span> Dashboard
+                    </a>
+
+                {% elif request.user.is_staff %}
+
+                    <a href="{% url 'staff_dashboard' %}" class="nav-button dashboard-button">
+                        <span>←</span> Dashboard
+                    </a>
+
+                {% elif request.user.userprofile.role == 'company' %}
+
+                    <a href="{% url 'company_dashboard' %}" class="nav-button dashboard-button">
+                        <span>←</span> Dashboard
+                    </a>
+
+                {% else %}
+
+                    <a href="{% url 'student_dashboard' %}" class="nav-button dashboard-button">
+                        <span>←</span> Dashboard
+                    </a>
+
+                {% endif %}
+
+                <a href="/" class="nav-button home-button">
+                    <span>⌂</span> Home
+                </a>
+
+                <a href="{% url 'logout' %}" class="nav-button logout-button">
+                    <span>↪</span> Logout
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+</nav>
+
+
+<div class="page-container">
+
+    <div class="header-card">
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+            <div>
+                <h2 class="fw-bold mb-2">Notifications</h2>
+
+                <p class="mb-0">
+                    Stay updated with your latest activities and important updates.
+                </p>
+            </div>
+
+            <div class="text-end">
+                <h2 class="fw-bold mb-0">{{ unread_count }}</h2>
+                <small>Unread notifications</small>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+
+        <div>
+            <h4 class="fw-bold mb-1">All Notifications</h4>
+
+            <small class="text-secondary">
+                Your latest updates appear here.
+            </small>
+        </div>
+
+        {% if unread_count > 0 %}
+
+            <form method="POST" action="{% url 'mark_all_notifications_read' %}">
+                {% csrf_token %}
+
+                <button type="submit" class="btn-purple">
+                    Mark All as Read
+                </button>
+            </form>
+
+        {% endif %}
+
+    </div>
+
+
+    {% for notification in notifications %}
+
+        <div class="notification-card {% if not notification.is_read %}unread{% endif %}">
+
+            <div class="notification-icon">
+
+                {% if notification.notification_type == 'application' %}
+                    📄
+                {% elif notification.notification_type == 'status' %}
+                    📊
+                {% elif notification.notification_type == 'interview' %}
+                    🎯
+                {% else %}
+                    🔔
+                {% endif %}
+
+            </div>
+
+
+            <div class="flex-grow-1">
+
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+
+                    <h6 class="notification-title mb-0">
+                        {{ notification.title }}
+                    </h6>
+
+                    {% if not notification.is_read %}
+                        <span class="unread-badge">NEW</span>
+                    {% endif %}
+
+                </div>
+
+                <p class="notification-message mt-2">
+                    {{ notification.message }}
+                </p>
+
+                <div class="notification-time">
+                    {{ notification.created_at|date:"d M Y, h:i A" }}
+                </div>
+
+                {% if notification.link %}
+                    <a href="{{ notification.link }}"
+                       class="btn btn-sm btn-outline-primary mt-3">
+                        View Details
+                    </a>
+                {% endif %}
+
+            </div>
+
+
+            {% if not notification.is_read %}
+
+                <form method="POST"
+                      action="{% url 'mark_notification_read' notification.id %}">
+
+                    {% csrf_token %}
+
+                    <button type="submit" class="read-button">
+                        Mark Read
+                    </button>
+
+                </form>
+
+            {% endif %}
+
+        </div>
+
+    {% empty %}
+
+        <div class="empty-state">
+
+            <div class="empty-icon">🔔</div>
+
+            <h4 class="fw-bold">You're all caught up!</h4>
+
+            <p class="text-secondary mb-0">
+                You don't have any notifications yet.
+                New updates will appear here.
+            </p>
+
+        </div>
+
+    {% endfor %}
+
+</div>
+
+</body>
+</html>
+```

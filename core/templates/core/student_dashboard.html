@@ -1,0 +1,835 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Dashboard | Workflow AI</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: #f7f5ff;
+            color: #30234e;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.96);
+            border-bottom: 1px solid #eee9fb;
+            padding: 15px 0;
+            box-shadow: 0 3px 18px rgba(65, 43, 110, 0.04);
+        }
+
+        .brand {
+            color: #6941c6;
+            font-size: 23px;
+            font-weight: 800;
+            letter-spacing: -0.7px;
+            text-decoration: none;
+        }
+
+        .brand:hover { color: #6941c6; }
+
+        .nav-link-btn {
+            display: inline-block;
+            padding: 9px 15px;
+            border-radius: 9px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+            transition: 0.2s;
+        }
+
+        .nav-active {
+            background: #7652d6;
+            color: white;
+        }
+
+        .nav-active:hover {
+            background: #603cc0;
+            color: white;
+        }
+
+        .nav-outline {
+            color: #6941c6;
+            border: 1px solid #e3daf7;
+        }
+
+        .nav-outline:hover {
+            background: #eee8ff;
+            color: #6941c6;
+        }
+
+        .nav-logout {
+            color: #dc5969;
+            border: 1px solid #f5dce1;
+        }
+
+        .nav-logout:hover {
+            background: #fff0f2;
+            color: #c83c50;
+        }
+
+        .notification-btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 9px 13px;
+            border: 1px solid #e3daf7;
+            border-radius: 9px;
+            color: #6941c6;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+            transition: 0.2s;
+        }
+
+        .notification-btn:hover {
+            background: #eee8ff;
+            color: #603cc0;
+        }
+
+        .notification-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 19px;
+            height: 19px;
+            padding: 0 5px;
+            border-radius: 20px;
+            background: #e34d68;
+            color: white;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .main-content {
+            max-width: 1450px;
+            margin: auto;
+            padding: 38px 25px;
+        }
+
+        .page-heading h2 {
+            color: #30234e;
+            font-size: 27px;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+        }
+
+        .muted { color: #89829b; }
+
+        .welcome-card {
+            position: relative;
+            overflow: hidden;
+            padding: 35px;
+            border-radius: 22px;
+            background: linear-gradient(115deg, #7652d6, #9876e8, #b29af2);
+            color: white;
+            box-shadow: 0 12px 30px rgba(112, 77, 190, 0.18);
+        }
+
+        .welcome-card::after {
+            content: "";
+            position: absolute;
+            width: 230px;
+            height: 230px;
+            right: 40px;
+            top: -105px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.10);
+        }
+
+        .welcome-card::before {
+            content: "";
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            right: 170px;
+            bottom: -105px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.09);
+        }
+
+        .welcome-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-label {
+            display: inline-block;
+            padding: 7px 13px;
+            margin-bottom: 17px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 30px;
+            background: rgba(255,255,255,0.18);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .welcome-card h2 {
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .welcome-card p {
+            max-width: 700px;
+            margin-bottom: 0;
+            color: #f1eaff;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .section-heading {
+            color: #30234e;
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 18px;
+        }
+
+        .stat-card {
+            height: 100%;
+            padding: 22px;
+            background: white;
+            border: 1px solid #eee9f8;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(70, 48, 110, 0.035);
+            transition: 0.25s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px rgba(70, 48, 110, 0.08);
+        }
+
+        .stat-icon {
+            width: 43px;
+            height: 43px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 13px;
+            font-size: 21px;
+            margin-bottom: 15px;
+        }
+
+        .stat-number {
+            color: #6941c6;
+            font-size: 29px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            color: #89829b;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .icon-purple { background: #eee8ff; }
+        .icon-blue { background: #e8f1ff; }
+        .icon-orange { background: #fff0e4; }
+        .icon-green { background: #e4f7ed; }
+
+        .feature-card {
+            height: 100%;
+            padding: 25px;
+            background: white;
+            border: 1px solid #eee9f8;
+            border-radius: 17px;
+            box-shadow: 0 5px 20px rgba(70, 48, 110, 0.035);
+            transition: 0.25s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: #d9ccfa;
+            box-shadow: 0 13px 28px rgba(70, 48, 110, 0.09);
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            font-size: 23px;
+            margin-bottom: 18px;
+        }
+
+        .feature-card h5 {
+            color: #352653;
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            min-height: 65px;
+            color: #89829b;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .dashboard-btn {
+            display: inline-block;
+            padding: 10px 17px;
+            border-radius: 9px;
+            background: #7652d6;
+            color: white;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+            transition: 0.2s;
+        }
+
+        .dashboard-btn:hover {
+            background: #603cc0;
+            color: white;
+        }
+
+        .profile-edit-btn {
+            display: inline-block;
+            padding: 10px 17px;
+            border: 1px solid #e3daf7;
+            border-radius: 9px;
+            color: #6941c6;
+            background: #fff;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+            transition: 0.2s;
+        }
+
+        .profile-edit-btn:hover {
+            background: #eee8ff;
+            color: #603cc0;
+        }
+
+        .section-card {
+            background: white;
+            border: 1px solid #eee9f8;
+            border-radius: 18px;
+            box-shadow: 0 5px 20px rgba(70, 48, 110, 0.035);
+        }
+
+        .application-card {
+            padding: 19px;
+            border: 1px solid #eee9f8;
+            border-radius: 13px;
+            transition: 0.2s;
+        }
+
+        .application-card:hover {
+            border-color: #d9ccfa;
+            background: #fdfcff;
+        }
+
+        .application-title {
+            color: #352653;
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 11px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .status-selected {
+            background: #e4f7ed;
+            color: #198754;
+        }
+
+        .status-shortlisted {
+            background: #eee8ff;
+            color: #6941c6;
+        }
+
+        .status-rejected {
+            background: #ffe8eb;
+            color: #d13c50;
+        }
+
+        .status-pending {
+            background: #fff2df;
+            color: #a96b16;
+        }
+
+        .small-btn {
+            display: inline-block;
+            padding: 8px 12px;
+            border: 1px solid #e3daf7;
+            border-radius: 8px;
+            color: #6941c6;
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 700;
+            transition: 0.2s;
+        }
+
+        .small-btn:hover {
+            background: #eee8ff;
+            color: #603cc0;
+        }
+
+        .assessment-btn {
+            background: #7652d6;
+            color: white;
+            border-color: #7652d6;
+        }
+
+        .assessment-btn:hover {
+            background: #603cc0;
+            color: white;
+            border-color: #603cc0;
+        }
+
+        .result-btn {
+            background: #e4f7ed;
+            color: #198754;
+            border-color: #d0eddd;
+        }
+
+        .result-btn:hover {
+            background: #d2f0df;
+            color: #146c43;
+        }
+
+        .empty-icon { font-size: 46px; }
+
+        .communication-card {
+            height: 100%;
+            padding: 23px;
+            background: white;
+            border: 1px solid #eee9f8;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(70,48,110,0.035);
+            transition: 0.25s;
+        }
+
+        .communication-card:hover {
+            transform: translateY(-4px);
+            border-color: #d9ccfa;
+            box-shadow: 0 12px 25px rgba(70,48,110,0.07);
+        }
+
+        .communication-icon {
+            font-size: 27px;
+            margin-bottom: 12px;
+        }
+
+        .communication-card h5 {
+            color: #352653;
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .communication-card p {
+            min-height: 42px;
+            color: #89829b;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .communication-link {
+            color: #6941c6;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .communication-link:hover {
+            color: #49309a;
+        }
+
+        footer {
+            padding: 30px 0 10px;
+            color: #a29ab2;
+            font-size: 12px;
+        }
+
+        @media(max-width: 768px) {
+            .main-content { padding: 25px 16px; }
+            .welcome-card { padding: 25px; }
+            .welcome-card h2 { font-size: 22px; }
+            .page-heading h2 { font-size: 23px; }
+
+            .navbar .container {
+                gap: 14px;
+                align-items: flex-start !important;
+                flex-direction: column;
+            }
+
+            .nav-link-btn,
+            .notification-btn {
+                padding: 8px 11px;
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="container d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+        <a href="/" class="brand">
+            Workflow AI
+        </a>
+
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+
+            <a href="{% url 'student_dashboard' %}" class="nav-link-btn nav-active">
+                Dashboard
+            </a>
+
+            <a href="{% url 'student_profile_view' %}" class="nav-link-btn nav-outline">
+                My Profile
+            </a>
+
+            <a href="{% url 'student_jobs' %}" class="nav-link-btn nav-outline">
+                Find Jobs
+            </a>
+
+            <a href="{% url 'my_applications' %}" class="nav-link-btn nav-outline">
+                My Applications
+            </a>
+
+            <a href="{% url 'notifications' %}" class="notification-btn">
+                <span>🔔</span>
+                <span>Notifications</span>
+                {% if notifications_unread_count > 0 %}
+                    <span class="notification-count">{{ notifications_unread_count }}</span>
+                {% endif %}
+            </a>
+
+            <a href="{% url 'logout' %}" class="nav-link-btn nav-logout">
+                Logout
+            </a>
+
+        </div>
+    </div>
+</nav>
+
+<main class="main-content">
+
+    <div class="page-heading mb-4">
+        <h2>Student Dashboard</h2>
+        <p class="muted mb-0">
+            Your placement journey starts here. Explore opportunities
+            and track your progress.
+        </p>
+    </div>
+
+    <section class="welcome-card mb-4">
+        <div class="welcome-content">
+
+            <span class="welcome-label">
+                WORKFLOW AI · STUDENT WORKSPACE
+            </span>
+
+            <h2>
+                Welcome, {{ user.first_name|default:"Student" }}!
+            </h2>
+
+            <p>
+                Track your applications, discover career opportunities,
+                attempt skill assessments and take the next step
+                towards your professional goals.
+            </p>
+
+        </div>
+    </section>
+
+    <!-- COMMUNICATION CENTER -->
+
+    <section class="mb-5">
+
+        <h5 class="section-heading">Communication Center</h5>
+
+        <p class="muted small mb-3">
+            Read important messages and updates from companies and the Workflow AI team.
+        </p>
+
+        <div class="row g-3">
+
+            <div class="col-md-6">
+
+                <div class="communication-card">
+
+                    <div class="communication-icon">📥</div>
+
+                    <h5>Inbox</h5>
+
+                    <p>
+                        Read interview updates and messages received from companies, Admin and Staff.
+                    </p>
+
+                    <a href="{% url 'message_inbox' %}" class="communication-link">
+                        Open Inbox →
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <h5 class="section-heading">Your Placement Overview</h5>
+
+    <div class="row g-3 mb-5">
+
+        <div class="col-6 col-lg-3">
+            <div class="stat-card">
+                <div class="stat-icon icon-purple">📋</div>
+                <div class="stat-number">{{ total_applications|default:0 }}</div>
+                <div class="stat-label">Total Applications</div>
+            </div>
+        </div>
+
+        <div class="col-6 col-lg-3">
+            <div class="stat-card">
+                <div class="stat-icon icon-orange">⏳</div>
+                <div class="stat-number">{{ pending_applications|default:0 }}</div>
+                <div class="stat-label">Pending Applications</div>
+            </div>
+        </div>
+
+        <div class="col-6 col-lg-3">
+            <div class="stat-card">
+                <div class="stat-icon icon-blue">⭐</div>
+                <div class="stat-number">{{ shortlisted_applications|default:0 }}</div>
+                <div class="stat-label">Shortlisted</div>
+            </div>
+        </div>
+
+        <div class="col-6 col-lg-3">
+            <div class="stat-card">
+                <div class="stat-icon icon-green">🎉</div>
+                <div class="stat-number">{{ selected_applications|default:0 }}</div>
+                <div class="stat-label">Selected</div>
+            </div>
+        </div>
+
+    </div>
+
+    <h5 class="section-heading">Explore Workflow AI</h5>
+
+    <p class="muted small mb-3">
+        Everything you need to manage your placement journey.
+    </p>
+
+    <div class="row g-4 mb-5">
+
+        <!-- STUDENT PROFILE -->
+
+        <div class="col-md-4">
+            <div class="feature-card">
+                <div class="feature-icon icon-purple">👤</div>
+
+                <h5>My Student Profile</h5>
+
+                <p>
+                    View your personal information, academic details,
+                    skills and update your profile whenever required.
+                </p>
+
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{% url 'student_profile_view' %}" class="dashboard-btn">
+                        View Profile →
+                    </a>
+
+                    <a href="{% url 'student_profile' %}" class="profile-edit-btn">
+                        Edit Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="feature-card">
+                <div class="feature-icon icon-purple">💼</div>
+                <h5>Find Jobs</h5>
+                <p>
+                    Explore available job openings and discover
+                    opportunities that match your profile.
+                </p>
+                <a href="{% url 'student_jobs' %}" class="dashboard-btn">
+                    Explore Jobs →
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="feature-card">
+                <div class="feature-icon icon-blue">📝</div>
+                <h5>Skill Assessment</h5>
+                <p>
+                    Attempt company assessments linked to your
+                    applications and check your assessment results.
+                </p>
+                <a href="#applications" class="dashboard-btn">
+                    View Assessments →
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="feature-card">
+                <div class="feature-icon icon-green">📊</div>
+                <h5>My Applications</h5>
+                <p>
+                    Monitor your application status and follow
+                    your recruitment progress in one place.
+                </p>
+                <a href="{% url 'my_applications' %}" class="dashboard-btn">
+                    View Applications →
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <section class="section-card" id="applications">
+        <div class="card-body p-4">
+
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+
+                <div>
+                    <h5 class="fw-bold mb-1">My Recent Applications</h5>
+                    <p class="muted small mb-0">
+                        Track your applied jobs and assessments.
+                    </p>
+                </div>
+
+                <a href="{% url 'my_applications' %}" class="small-btn">
+                    View All Applications →
+                </a>
+
+            </div>
+
+            {% if applications %}
+
+                {% for application in applications %}
+
+                    <div class="application-card mb-3">
+
+                        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+
+                            <div>
+                                <h6 class="application-title mb-2">
+                                    {{ application.job.title }}
+                                </h6>
+
+                                <p class="muted small mb-2">
+                                    🏢 {{ application.job.company.company_name }}
+                                </p>
+
+                                <span class="status-badge
+                                    {% if application.status == 'selected' %}
+                                        status-selected
+                                    {% elif application.status == 'shortlisted' %}
+                                        status-shortlisted
+                                    {% elif application.status == 'rejected' %}
+                                        status-rejected
+                                    {% else %}
+                                        status-pending
+                                    {% endif %}">
+                                    {{ application.get_status_display }}
+                                </span>
+
+                                <div class="small muted mt-3">
+                                    Applied on:
+                                    {{ application.applied_at|date:"d M Y" }}
+                                </div>
+                            </div>
+
+                            <div class="d-flex flex-wrap gap-2 align-items-center">
+
+                                <a href="{% url 'student_job_detail' application.job.id %}"
+                                   class="small-btn">
+                                    View Job
+                                </a>
+
+                                {% with attempts=application.assessmentattempt_set.all %}
+                                    {% with attempt=attempts|first %}
+
+                                        {% if attempt and attempt.completed %}
+
+                                            <a href="{% url 'assessment_result' attempt.id %}"
+                                               class="small-btn result-btn">
+                                                View Assessment Result
+                                            </a>
+
+                                        {% else %}
+
+                                            <a href="{% url 'start_assessment' application.id %}"
+                                               class="small-btn assessment-btn">
+                                                Take Assessment
+                                            </a>
+
+                                        {% endif %}
+
+                                    {% endwith %}
+                                {% endwith %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="text-center py-5">
+
+                    <div class="empty-icon">📄</div>
+
+                    <h5 class="fw-bold mt-3">No Applications Yet</h5>
+
+                    <p class="muted small">
+                        You haven't applied for any jobs yet.
+                        Explore available opportunities to get started.
+                    </p>
+
+                    <a href="{% url 'student_jobs' %}" class="dashboard-btn mt-2">
+                        Find Jobs →
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+    </section>
+
+    <footer class="text-center">
+        Workflow AI · Plan Smarter · Organize Better · Deliver Faster
+    </footer>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

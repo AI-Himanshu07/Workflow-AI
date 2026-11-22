@@ -1,0 +1,312 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>View Message | Workflow AI</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f5f6fc;
+            font-family: Arial, sans-serif;
+            color: #292d49;
+        }
+
+        .navbar {
+            background: white;
+            border-bottom: 1px solid #e9eaf2;
+        }
+
+        .brand {
+            color: #6558c8;
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .main-card {
+            background: white;
+            border: 1px solid #e9eaf2;
+            border-radius: 18px;
+            padding: 35px;
+        }
+
+        .page-title {
+            font-weight: 800;
+            color: #292d49;
+        }
+
+        .subject {
+            font-size: 25px;
+            font-weight: 800;
+            color: #5146a7;
+        }
+
+        .message-body {
+            background: #fafaff;
+            border: 1px solid #ededf5;
+            border-radius: 13px;
+            padding: 25px;
+            min-height: 180px;
+            line-height: 1.8;
+            color: #444963;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #85899d;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            font-weight: 700;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: #414660;
+        }
+
+        .btn-primary {
+            background: #6d60ce;
+            border-color: #6d60ce;
+            border-radius: 10px;
+            padding: 10px 20px;
+        }
+
+        .btn-primary:hover {
+            background: #584bb7;
+            border-color: #584bb7;
+        }
+
+        .btn-outline-secondary,
+        .btn-outline-primary {
+            border-radius: 10px;
+            padding: 10px 20px;
+        }
+
+        .status {
+            background: #e6f7ed;
+            color: #23834c;
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        @media (max-width: 576px) {
+            .main-card {
+                padding: 22px;
+            }
+
+            .subject {
+                font-size: 21px;
+            }
+
+            .navbar .container {
+                flex-wrap: wrap;
+                gap: 10px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="container d-flex align-items-center">
+
+        <a href="/" class="navbar-brand brand">
+            Workflow AI
+        </a>
+
+        <div class="ms-auto d-flex flex-wrap gap-2">
+
+            <a href="{% url 'message_inbox' %}" class="btn btn-sm btn-outline-primary">
+                Inbox
+            </a>
+
+            {% if request.user.is_superuser or request.user.is_staff or request.user.userprofile.role == 'company' %}
+
+                <a href="{% url 'sent_messages' %}" class="btn btn-sm btn-outline-primary">
+                    Sent
+                </a>
+
+                <a href="{% url 'send_message' %}" class="btn btn-sm btn-primary">
+                    Compose
+                </a>
+
+            {% endif %}
+
+            {% if request.user.is_superuser %}
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-sm btn-outline-secondary">
+                    ← Dashboard
+                </a>
+            {% elif request.user.is_staff %}
+                <a href="{% url 'staff_dashboard' %}" class="btn btn-sm btn-outline-secondary">
+                    ← Dashboard
+                </a>
+            {% elif request.user.userprofile.role == 'company' %}
+                <a href="{% url 'company_dashboard' %}" class="btn btn-sm btn-outline-secondary">
+                    ← Dashboard
+                </a>
+            {% else %}
+                <a href="{% url 'student_dashboard' %}" class="btn btn-sm btn-outline-secondary">
+                    ← Dashboard
+                </a>
+            {% endif %}
+
+        </div>
+
+    </div>
+</nav>
+
+
+<div class="container py-5">
+
+    <div class="mb-4">
+
+        <h2 class="page-title mb-1">
+            Message Details
+        </h2>
+
+        <p class="text-secondary mb-0">
+            View your message and communication details.
+        </p>
+
+    </div>
+
+
+    <div class="main-card">
+
+        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+
+            <div class="subject">
+                {{ message.subject }}
+            </div>
+
+            <span class="status">
+                <i class="me-1">✓</i> Read
+            </span>
+
+        </div>
+
+
+        <div class="row g-4 mb-4">
+
+            <div class="col-md-6">
+
+                <div class="detail-label">
+                    From
+                </div>
+
+                <div class="detail-value mt-1">
+                    {{ message.sender.username }}
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6">
+
+                <div class="detail-label">
+                    Received On
+                </div>
+
+                <div class="detail-value mt-1">
+                    {{ message.created_at|date:"d M Y, h:i A" }}
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6">
+
+                <div class="detail-label">
+                    Message Type
+                </div>
+
+                <div class="detail-value mt-1">
+                    {{ message.get_message_type_display }}
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6">
+
+                <div class="detail-label">
+                    Status
+                </div>
+
+                <div class="detail-value mt-1">
+                    {% if message_recipient.is_read %}
+                        Read
+                    {% else %}
+                        Unread
+                    {% endif %}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <hr class="my-4">
+
+
+        <div class="detail-label mb-3">
+            Message Content
+        </div>
+
+        <div class="message-body">{{ message.body }}</div>
+
+
+        <div class="d-flex flex-wrap gap-2 mt-4">
+
+            <a
+                href="{% url 'message_inbox' %}"
+                class="btn btn-primary"
+            >
+                ← Back to Inbox
+            </a>
+
+            {% if request.user.is_superuser or request.user.is_staff or request.user.userprofile.role == 'company' %}
+                <a
+                    href="{% url 'sent_messages' %}"
+                    class="btn btn-outline-secondary"
+                >
+                    Sent Messages
+                </a>
+            {% endif %}
+
+            {% if request.user.is_superuser %}
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-secondary">
+                    Back to Dashboard
+                </a>
+            {% elif request.user.is_staff %}
+                <a href="{% url 'staff_dashboard' %}" class="btn btn-outline-secondary">
+                    Back to Dashboard
+                </a>
+            {% elif request.user.userprofile.role == 'company' %}
+                <a href="{% url 'company_dashboard' %}" class="btn btn-outline-secondary">
+                    Back to Dashboard
+                </a>
+            {% else %}
+                <a href="{% url 'student_dashboard' %}" class="btn btn-outline-secondary">
+                    Back to Dashboard
+                </a>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

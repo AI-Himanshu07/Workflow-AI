@@ -1,0 +1,176 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hiring Workflow | Workflow AI</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f7f5ff;
+            color: #30234e;
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            background: white;
+            padding: 16px 0;
+            border-bottom: 1px solid #eee9fb;
+        }
+
+        .brand {
+            color: #6941c6;
+            font-size: 22px;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .main {
+            max-width: 1150px;
+            margin: auto;
+            padding: 40px 20px;
+        }
+
+        .heading {
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .job-card {
+            background: white;
+            border: 1px solid #eee9f8;
+            border-radius: 16px;
+            padding: 24px;
+            height: 100%;
+            box-shadow: 0 5px 20px rgba(70, 48, 110, 0.04);
+        }
+
+        .job-card h5 {
+            font-weight: 800;
+            color: #493276;
+        }
+
+        .muted {
+            color: #89829b;
+            font-size: 13px;
+        }
+
+        .workflow-btn {
+            display: inline-block;
+            width: 100%;
+            padding: 11px;
+            background: #7652d6;
+            color: white;
+            border-radius: 9px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .workflow-btn:hover {
+            background: #603cc0;
+            color: white;
+        }
+
+        .back-btn {
+            color: #6941c6;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .empty {
+            background: white;
+            border: 1px solid #eee9f8;
+            border-radius: 16px;
+            padding: 45px 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="container d-flex justify-content-between align-items-center">
+        <a href="{% url 'company_dashboard' %}" class="brand">
+            Workflow AI
+        </a>
+
+        <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm">
+            Logout
+        </a>
+    </div>
+</nav>
+
+<main class="main">
+
+    <a href="{% url 'company_dashboard' %}" class="back-btn">
+        ← Back to Dashboard
+    </a>
+
+    <div class="mt-4 mb-4">
+        <h2 class="heading">Hiring Workflow</h2>
+
+        <p class="muted">
+            Select a job to manage applicants, review candidates
+            and update their recruitment status.
+        </p>
+    </div>
+
+    <div class="row g-4">
+
+        {% for job in jobs %}
+
+        <div class="col-md-6 col-lg-4">
+
+            <div class="job-card">
+
+                <h5>{{ job.title }}</h5>
+
+                <p class="muted mb-2">
+                    📍 {{ job.location|default:"Location not specified" }}
+                </p>
+
+                <p class="muted mb-4">
+                    Job Type: {{ job.get_job_type_display|default:job.job_type }}
+                </p>
+
+                <a href="{% url 'hiring_workflow' job.id %}"
+                   class="workflow-btn">
+                    Open Hiring Workflow →
+                </a>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="col-12">
+            <div class="empty">
+                <h5 class="fw-bold">No Jobs Available</h5>
+
+                <p class="muted">
+                    Create a job first to start managing its hiring workflow.
+                </p>
+
+                <a href="{% url 'create_job' %}" class="workflow-btn"
+                   style="max-width:220px;">
+                    + Create Job
+                </a>
+            </div>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</main>
+
+</body>
+</html>
