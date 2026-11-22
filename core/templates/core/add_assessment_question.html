@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Add Assessment Question | Workflow AI</title>
+    <title>Bulk Add Assessment Questions | Workflow AI</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -25,9 +25,11 @@
             font-weight: 800;
         }
 
-        .form-card {
+        .form-card,
+        .question-card {
             border: 1px solid #e8edf5;
-            border-radius: 18px;
+            border-radius: 16px;
+            background: #fff;
         }
 
         .section-label {
@@ -39,7 +41,7 @@
 
         .form-control,
         .form-select {
-            padding: 12px 14px;
+            padding: 11px 13px;
             border-color: #dce3ed;
             border-radius: 10px;
         }
@@ -48,10 +50,6 @@
         .form-select:focus {
             border-color: #2563eb;
             box-shadow: 0 0 0 3px rgba(37, 99, 235, .10);
-        }
-
-        .option-label {
-            font-weight: 600;
         }
 
         .primary-btn {
@@ -68,6 +66,24 @@
             background: #eff6ff;
             border: 1px solid #dbeafe;
             border-radius: 12px;
+        }
+
+        .question-number {
+            color: #2563eb;
+            font-weight: 800;
+        }
+
+        .question-card {
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .option-label {
+            font-weight: 600;
+        }
+
+        .remove-btn {
+            border-radius: 9px;
         }
     </style>
 </head>
@@ -92,9 +108,8 @@
 <main class="container py-4 py-md-5">
 
     <div class="row justify-content-center">
-        <div class="col-lg-8">
+        <div class="col-lg-10">
 
-            <!-- HEADER -->
             <div class="mb-4">
 
                 <div class="section-label text-primary mb-2">
@@ -102,11 +117,11 @@
                 </div>
 
                 <h1 class="fw-bold mb-2">
-                    Add Assessment Question
+                    Bulk Add Questions
                 </h1>
 
                 <p class="text-muted mb-2">
-                    Create an MCQ question to evaluate candidates' skills.
+                    Create multiple MCQ questions and save them together.
                 </p>
 
                 <div class="fw-semibold">
@@ -121,185 +136,74 @@
                 </div>
             {% endif %}
 
-            <!-- FORM -->
             <div class="card form-card shadow-sm">
+                <div class="card-body p-3 p-md-4">
 
-                <div class="card-body p-4 p-md-5">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
 
-                    <form method="POST">
-                        {% csrf_token %}
+                        <div>
+                            <h5 class="fw-bold mb-1">
+                                Assessment Questions
+                            </h5>
 
-                        <!-- QUESTION -->
-                        <div class="mb-4">
-
-                            <label class="form-label fw-bold">
-                                Question
-                            </label>
-
-                            <textarea
-                                name="question"
-                                class="form-control"
-                                rows="4"
-                                placeholder="Example: Which keyword is used to define a function in Python?"
-                                required
-                            ></textarea>
-
-                        </div>
-
-                        <hr class="my-4 opacity-25">
-
-                        <!-- OPTIONS -->
-                        <div class="mb-3">
-                            <h5 class="fw-bold mb-1">Answer Options</h5>
                             <p class="text-muted small mb-0">
-                                Enter four possible answers for this question.
+                                Add up to 100 questions in one submission.
                             </p>
                         </div>
 
-                        <div class="row">
+                        <span class="badge text-bg-primary fs-6"
+                              id="questionCount">
+                            0 Questions
+                        </span>
 
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label option-label">
-                                    Option A
-                                </label>
-                                <input
-                                    type="text"
-                                    name="option_a"
-                                    class="form-control"
-                                    placeholder="Enter option A"
-                                    required
-                                >
-                            </div>
+                    </div>
 
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label option-label">
-                                    Option B
-                                </label>
-                                <input
-                                    type="text"
-                                    name="option_b"
-                                    class="form-control"
-                                    placeholder="Enter option B"
-                                    required
-                                >
-                            </div>
+                    <form method="POST" id="bulkQuestionForm">
+                        {% csrf_token %}
 
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label option-label">
-                                    Option C
-                                </label>
-                                <input
-                                    type="text"
-                                    name="option_c"
-                                    class="form-control"
-                                    placeholder="Enter option C"
-                                    required
-                                >
-                            </div>
+                        <input
+                            type="hidden"
+                            name="total_questions"
+                            id="totalQuestions"
+                            value="0"
+                        >
 
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label option-label">
-                                    Option D
-                                </label>
-                                <input
-                                    type="text"
-                                    name="option_d"
-                                    class="form-control"
-                                    placeholder="Enter option D"
-                                    required
-                                >
-                            </div>
+                        <div id="questionsContainer"></div>
 
-                        </div>
+                        <div class="d-flex flex-wrap gap-2 mb-4">
 
-                        <hr class="my-4 opacity-25">
-
-                        <!-- CORRECT ANSWER -->
-                        <div class="mb-4">
-
-                            <label class="form-label fw-bold">
-                                Correct Answer
-                            </label>
-
-                            <select
-                                name="correct_answer"
-                                class="form-select"
-                                required
+                            <button
+                                type="button"
+                                class="btn btn-outline-primary px-4 py-2"
+                                id="addQuestionBtn"
                             >
-                                <option value="">Select correct option</option>
-                                <option value="A">Option A</option>
-                                <option value="B">Option B</option>
-                                <option value="C">Option C</option>
-                                <option value="D">Option D</option>
-                            </select>
-
-                            <div class="form-text">
-                                This answer will be used for automatic assessment scoring.
-                            </div>
+                                + Add Another Question
+                            </button>
 
                         </div>
 
-                        <!-- SKILL AND MARKS -->
-                        <div class="row">
-
-                            <div class="col-md-8 mb-4">
-
-                                <label class="form-label fw-bold">
-                                    Skill
-                                </label>
-
-                                <input
-                                    type="text"
-                                    name="skill"
-                                    class="form-control"
-                                    placeholder="Example: Python, SQL, Django"
-                                >
-
-                                <div class="form-text">
-                                    Optional. Identifies the skill tested.
-                                </div>
-
-                            </div>
-
-                            <div class="col-md-4 mb-4">
-
-                                <label class="form-label fw-bold">
-                                    Marks
-                                </label>
-
-                                <input
-                                    type="number"
-                                    name="marks"
-                                    class="form-control"
-                                    value="1"
-                                    min="1"
-                                    required
-                                >
-
-                            </div>
-
-                        </div>
-
-                        <!-- INFORMATION -->
                         <div class="info-panel p-3 mb-4">
+
                             <div class="fw-semibold text-primary mb-1">
                                 Assessment scoring
                             </div>
+
                             <div class="small text-muted">
-                                Candidates will receive marks for correct answers.
-                                Their final percentage will contribute to the company
+                                Candidates receive marks for correct answers.
+                                Their final percentage contributes to company
                                 applicant ranking.
                             </div>
+
                         </div>
 
-                        <!-- BUTTONS -->
                         <div class="d-flex flex-wrap gap-2">
 
                             <button
                                 type="submit"
                                 class="btn btn-primary primary-btn px-4 py-2"
+                                id="saveQuestionsBtn"
                             >
-                                Save Question
+                                Save All Questions
                             </button>
 
                             <a
@@ -324,6 +228,265 @@
     </div>
 
 </main>
+
+<script>
+
+    const container = document.getElementById("questionsContainer");
+    const addButton = document.getElementById("addQuestionBtn");
+    const totalInput = document.getElementById("totalQuestions");
+    const countLabel = document.getElementById("questionCount");
+    const form = document.getElementById("bulkQuestionForm");
+    const saveButton = document.getElementById("saveQuestionsBtn");
+
+    let questionCount = 0;
+
+    function updateCount() {
+
+        const count = container.querySelectorAll(".question-card").length;
+
+        totalInput.value = count;
+
+        countLabel.textContent =
+            count + (count === 1 ? " Question" : " Questions");
+
+        addButton.disabled = count >= 100;
+
+    }
+
+    function addQuestion() {
+
+        // Check the number of currently displayed questions.
+        if (container.querySelectorAll(".question-card").length >= 100) {
+            alert("Maximum 100 questions can be added at once.");
+            return;
+        }
+
+        const index = questionCount++;
+
+        const card = document.createElement("div");
+
+        card.className = "question-card shadow-sm";
+        card.dataset.index = index;
+
+        card.innerHTML = `
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+
+                <h5 class="question-number mb-0">
+                    Question ${index + 1}
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn btn-sm btn-outline-danger remove-btn"
+                    onclick="removeQuestion(this)"
+                >
+                    Remove
+                </button>
+
+            </div>
+
+            <div class="mb-4">
+
+                <label class="form-label fw-bold">
+                    Question
+                </label>
+
+                <textarea
+                    name="question_${index}"
+                    class="form-control"
+                    rows="3"
+                    placeholder="Enter your question"
+                    required
+                ></textarea>
+
+            </div>
+
+            <hr>
+
+            <h6 class="fw-bold mb-3">
+                Answer Options
+            </h6>
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label option-label">Option A</label>
+                    <input
+                        type="text"
+                        name="option_a_${index}"
+                        class="form-control"
+                        placeholder="Enter option A"
+                        required
+                    >
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label option-label">Option B</label>
+                    <input
+                        type="text"
+                        name="option_b_${index}"
+                        class="form-control"
+                        placeholder="Enter option B"
+                        required
+                    >
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label option-label">Option C</label>
+                    <input
+                        type="text"
+                        name="option_c_${index}"
+                        class="form-control"
+                        placeholder="Enter option C"
+                        required
+                    >
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label option-label">Option D</label>
+                    <input
+                        type="text"
+                        name="option_d_${index}"
+                        class="form-control"
+                        placeholder="Enter option D"
+                        required
+                    >
+                </div>
+
+            </div>
+
+            <hr>
+
+            <div class="row">
+
+                <div class="col-md-4 mb-3">
+
+                    <label class="form-label fw-bold">
+                        Correct Answer
+                    </label>
+
+                    <select
+                        name="correct_answer_${index}"
+                        class="form-select"
+                        required
+                    >
+                        <option value="">Select answer</option>
+                        <option value="A">Option A</option>
+                        <option value="B">Option B</option>
+                        <option value="C">Option C</option>
+                        <option value="D">Option D</option>
+                    </select>
+
+                </div>
+
+                <div class="col-md-5 mb-3">
+
+                    <label class="form-label fw-bold">
+                        Skill
+                    </label>
+
+                    <input
+                        type="text"
+                        name="skill_${index}"
+                        class="form-control"
+                        placeholder="Example: Python, SQL"
+                    >
+
+                </div>
+
+                <div class="col-md-3 mb-3">
+
+                    <label class="form-label fw-bold">
+                        Marks
+                    </label>
+
+                    <input
+                        type="number"
+                        name="marks_${index}"
+                        class="form-control"
+                        value="1"
+                        min="1"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+        `;
+
+        container.appendChild(card);
+
+        updateCount();
+
+    }
+
+    function removeQuestion(button) {
+
+        const card = button.closest(".question-card");
+
+        if (!card) {
+            return;
+        }
+
+        card.remove();
+
+        renumberQuestions();
+
+    }
+
+    function renumberQuestions() {
+
+        const cards = container.querySelectorAll(".question-card");
+
+        cards.forEach((card, index) => {
+
+            card.dataset.index = index;
+
+            card.querySelector(".question-number").textContent =
+                "Question " + (index + 1);
+
+            card.querySelectorAll("[name]").forEach(field => {
+
+                field.name = field.name.replace(/_\d+$/, "_" + index);
+
+            });
+
+        });
+
+        updateCount();
+
+    }
+
+    addButton.addEventListener("click", addQuestion);
+
+    form.addEventListener("submit", function(event) {
+
+        const cards = container.querySelectorAll(".question-card");
+
+        if (cards.length === 0) {
+
+            event.preventDefault();
+
+            alert("Please add at least one question.");
+
+            return;
+        }
+
+        updateCount();
+
+        saveButton.disabled = true;
+        addButton.disabled = true;
+
+        saveButton.textContent = "Saving Questions...";
+
+    });
+
+    // Start with one question automatically.
+    addQuestion();
+
+</script>
 
 </body>
 </html>

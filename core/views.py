@@ -1022,6 +1022,7 @@ def manage_assessment_questions(request, job_id):
     )
 
 
+
 @company_access_required
 def add_assessment_question(request, job_id):
 
@@ -1037,64 +1038,130 @@ def add_assessment_question(request, job_id):
 
     if request.method == 'POST':
 
-        question = request.POST.get('question', '').strip()
-        option_a = request.POST.get('option_a', '').strip()
-        option_b = request.POST.get('option_b', '').strip()
-        option_c = request.POST.get('option_c', '').strip()
-        option_d = request.POST.get('option_d', '').strip()
-        correct_answer = request.POST.get('correct_answer')
-        skill = request.POST.get('skill', '').strip()
-
         try:
-            marks = int(request.POST.get('marks', 1))
+            total_questions = int(
+                request.POST.get('total_questions', 0)
+            )
         except (TypeError, ValueError):
-            marks = 1
+            total_questions = 0
 
-        if (
-            not question
-            or not option_a
-            or not option_b
-            or not option_c
-            or not option_d
-            or correct_answer not in ['A', 'B', 'C', 'D']
-        ):
+        if total_questions < 1 or total_questions > 100:
             return render(
                 request,
                 'core/add_assessment_question.html',
                 {
                     'job': job,
-                    'error': 'Please complete the question and all four options.'
+                    'error': 'Please add between 1 and 100 questions.'
                 }
             )
 
-        if marks <= 0:
-            marks = 1
+        questions_to_create = []
+        errors = []
 
-        AssessmentQuestion.objects.create(
-            job=job,
-            question=question,
-            option_a=option_a,
-            option_b=option_b,
-            option_c=option_c,
-            option_d=option_d,
-            correct_answer=correct_answer,
-            skill=skill,
-            marks=marks
-        )
+        for index in range(total_questions):
 
-        messages.success(request, 'Assessment question added.')
+            question = request.POST.get(
+                f'question_{index}', ''
+            ).strip()
 
-        return redirect(
-            'manage_assessment_questions',
-            job_id=job.id
-        )
+            option_a = request.POST.get(
+                f'option_a_{index}', ''
+            ).strip()
+
+            option_b = request.POST.get(
+                f'option_b_{index}', ''
+            ).strip()
+
+            option_c = request.POST.get(
+                f'option_c_{index}', ''
+            ).strip()
+
+            option_d = request.POST.get(
+                f'option_d_{index}', ''
+            ).strip()
+
+            correct_answer = request.POST.get(
+                f'correct_answer_{index}', ''
+            ).strip()
+
+            skill = request.POST.get(
+                f'skill_{index}', ''
+            ).strip()
+
+            try:
+                marks = int(
+                    request.POST.get(f'marks_{index}', 1)
+                )
+            except (TypeError, ValueError):
+                marks = 0
+
+            if (
+                not question
+                or not option_a
+                or not option_b
+                or not option_c
+                or not option_d
+                or correct_answer not in ['A', 'B', 'C', 'D']
+                or marks <= 0
+            ):
+                errors.append(
+                    f'Please complete all required fields '
+                    f'for Question {index + 1}.'
+                )
+                continue
+
+            questions_to_create.append(
+                AssessmentQuestion(
+                    job=job,
+                    question=question,
+                    option_a=option_a,
+                    option_b=option_b,
+                    option_c=option_c,
+                    option_d=option_d,
+                    correct_answer=correct_answer,
+                    skill=skill,
+                    marks=marks
+                )
+            )
+
+        if errors:
+            return render(
+                request,
+                'core/add_assessment_question.html',
+                {
+                    'job': job,
+                    'error': ' '.join(errors)
+                }
+            )
+
+        try:
+            with transaction.atomic():
+                AssessmentQuestion.objects.bulk_create(
+                    questions_to_create
+                )
+
+            messages.success(
+                request,
+                f'{len(questions_to_create)} assessment '
+                f'questions added successfully.'
+            )
+
+            return redirect(
+                'manage_assessment_questions',
+                job_id=job.id
+            )
+
+        except Exception:
+            messages.error(
+                request,
+                'Unable to save questions. Please try again.'
+            )
 
     return render(
         request,
         'core/add_assessment_question.html',
         {'job': job}
     )
-
 
 @company_access_required
 def delete_assessment_question(request, question_id):
