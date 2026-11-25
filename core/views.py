@@ -1865,6 +1865,58 @@ def admin_delete_application(request, application_id):
 
 
 # =========================================================
+# ADMIN ONLY - WITHDRAW APPLICATION
+# =========================================================
+
+@admin_required
+def admin_withdraw_application(request, application_id):
+
+    if request.method != 'POST':
+        messages.error(
+            request,
+            'Invalid request. Please use the withdraw button.'
+        )
+        return redirect('admin_applications')
+
+    application = get_object_or_404(
+        Application,
+        id=application_id
+    )
+
+    if application.status == 'withdrawn':
+
+        messages.info(
+            request,
+            'This application is already withdrawn.'
+        )
+
+        return redirect('admin_applications')
+
+    # Change status only.
+    # Never delete the application or assessment history.
+    application.status = 'withdrawn'
+    application.save(update_fields=['status'])
+
+    # Notify the student.
+    Notification.objects.create(
+        user=application.student.user,
+        title='Application Withdrawn',
+        message=(
+            f'Your application for {application.job.title} '
+            'has been withdrawn by the platform administrator.'
+        ),
+        notification_type='status'
+    )
+
+    messages.success(
+        request,
+        'Application withdrawn successfully. Assessment history has been preserved.'
+    )
+
+    return redirect('admin_applications')
+
+
+# =========================================================
 # ADMIN / STAFF - COMPANY REQUEST LIST
 # =========================================================
 

@@ -208,4 +208,11 @@ urlpatterns = [
         views.admin_delete_staff,
         name='admin_delete_staff'
     ),
+
+    path(
+    'workflow-admin/applications/<int:application_id>/withdraw/',
+    views.admin_withdraw_application,
+    name='admin_withdraw_application'
+),
 ]
+ 

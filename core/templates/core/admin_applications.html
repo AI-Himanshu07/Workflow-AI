@@ -1,14 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Applications - Workflow AI Admin</title>
 
@@ -16,77 +12,54 @@
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
-
 </head>
-
 
 <body class="bg-light">
 
-
-<!-- =========================
-     NAVIGATION
-========================= -->
-
 <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
-
     <div class="container">
 
-        <a
-            class="navbar-brand fw-bold"
-            href="{% url 'admin_dashboard' %}"
-        >
+        <a class="navbar-brand fw-bold" href="{% url 'admin_dashboard' %}">
             Workflow AI Admin
         </a>
 
-
         <div>
-
-            <a
-                href="{% url 'admin_dashboard' %}"
-                class="btn btn-outline-light me-2"
-            >
+            <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-light me-2">
                 Dashboard
             </a>
 
-            <a
-                href="{% url 'logout' %}"
-                class="btn btn-outline-danger"
-            >
+            <a href="{% url 'logout' %}" class="btn btn-outline-danger">
                 Logout
             </a>
-
         </div>
 
     </div>
-
 </nav>
 
 
-<!-- =========================
-     MAIN CONTENT
-========================= -->
-
 <div class="container py-5">
 
-
     <div class="mb-4">
-
-        <h1 class="fw-bold">
-            Job Applications
-        </h1>
-
+        <h1 class="fw-bold">Job Applications</h1>
         <p class="lead text-muted">
             Monitor applications submitted by students.
         </p>
-
     </div>
+
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
 
 
     {% if applications %}
 
-
         <div class="card shadow-sm border-0">
-
             <div class="card-body p-0">
 
                 <div class="table-responsive">
@@ -94,37 +67,15 @@
                     <table class="table table-hover align-middle mb-0">
 
                         <thead class="table-dark">
-
                             <tr>
-
-                                <th>
-                                    Student
-                                </th>
-
-                                <th>
-                                    Job
-                                </th>
-
-                                <th>
-                                    Company
-                                </th>
-
-                                <th>
-                                    Applied On
-                                </th>
-
-                                <th>
-                                    Status
-                                </th>
-
-                                <th>
-                                    Action
-                                </th>
-
+                                <th>Student</th>
+                                <th>Job</th>
+                                <th>Company</th>
+                                <th>Applied On</th>
+                                <th>Status</th>
+                                <th>Action</th>
                             </tr>
-
                         </thead>
-
 
                         <tbody>
 
@@ -132,93 +83,70 @@
 
                                 <tr>
 
-
-                                    <!-- STUDENT -->
-
                                     <td>
-
                                         <strong>
                                             {{ application.student.full_name|default:application.student.user.username }}
                                         </strong>
-
                                         <br>
-
                                         <small class="text-muted">
                                             {{ application.student.user.email }}
                                         </small>
-
                                     </td>
 
+                                    <td>{{ application.job.title }}</td>
 
-                                    <!-- JOB -->
-
-                                    <td>
-
-                                        {{ application.job.title }}
-
-                                    </td>
-
-
-                                    <!-- COMPANY -->
+                                    <td>{{ application.job.company.company_name }}</td>
 
                                     <td>
-
-                                        {{ application.job.company.company_name }}
-
-                                    </td>
-
-
-                                    <!-- DATE -->
-
-                                    <td>
-
                                         {{ application.applied_at|date:"d M Y, h:i A" }}
-
                                     </td>
-
-
-                                    <!-- STATUS -->
 
                                     <td>
 
                                         {% if application.status == 'applied' %}
-
-                                            <span class="badge bg-primary">
-                                                Applied
-                                            </span>
+                                            <span class="badge bg-primary">Applied</span>
 
                                         {% elif application.status == 'shortlisted' %}
-
-                                            <span class="badge bg-warning text-dark">
-                                                Shortlisted
-                                            </span>
+                                            <span class="badge bg-warning text-dark">Shortlisted</span>
 
                                         {% elif application.status == 'selected' %}
-
-                                            <span class="badge bg-success">
-                                                Selected
-                                            </span>
+                                            <span class="badge bg-success">Selected</span>
 
                                         {% elif application.status == 'rejected' %}
+                                            <span class="badge bg-danger">Rejected</span>
 
-                                            <span class="badge bg-danger">
-                                                Rejected
-                                            </span>
+                                        {% elif application.status == 'withdrawn' %}
+                                            <span class="badge bg-secondary">Withdrawn</span>
 
                                         {% else %}
-
                                             <span class="badge bg-secondary">
                                                 {{ application.get_status_display }}
                                             </span>
-
                                         {% endif %}
 
                                     </td>
 
-
-                                    <!-- ACTION -->
-
                                     <td>
+
+                                        {% if application.status != 'withdrawn' %}
+
+                                            <form
+                                                method="POST"
+                                                action="{% url 'admin_withdraw_application' application.id %}"
+                                                class="d-inline"
+                                                onsubmit="return confirm('Are you sure you want to withdraw this application? Assessment history will be preserved.');"
+                                            >
+                                                {% csrf_token %}
+
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-sm btn-outline-warning"
+                                                >
+                                                    Withdraw
+                                                </button>
+                                            </form>
+
+                                        {% endif %}
 
                                         <a
                                             href="{% url 'admin_delete_application' application.id %}"
@@ -228,7 +156,6 @@
                                         </a>
 
                                     </td>
-
 
                                 </tr>
 
@@ -241,41 +168,29 @@
                 </div>
 
             </div>
-
         </div>
-
 
     {% else %}
 
-
         <div class="card shadow-sm border-0">
-
             <div class="card-body text-center p-5">
 
-                <div class="display-4 mb-3">
-                    📋
-                </div>
+                <div class="display-4 mb-3">📋</div>
 
-                <h3 class="fw-bold">
-                    No Applications Yet
-                </h3>
+                <h3 class="fw-bold">No Applications Yet</h3>
 
                 <p class="text-muted">
-                    There are currently no job applications
-                    on the platform.
+                    There are currently no job applications on the platform.
                 </p>
 
             </div>
-
         </div>
-
 
     {% endif %}
 
-
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
-
 </html>

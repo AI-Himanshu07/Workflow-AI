@@ -247,6 +247,7 @@ class Application(models.Model):
         ('shortlisted', 'Shortlisted'),
         ('rejected', 'Rejected'),
         ('selected', 'Selected'),
+        ('withdrawn', 'Withdrawn'),
     ]
 
     student = models.ForeignKey(
@@ -346,26 +347,21 @@ class AssessmentAttempt(models.Model):
 
     started_at = models.DateTimeField(auto_now_add=True)
 
-    # Duration is stored per attempt.
     duration_minutes = models.PositiveSmallIntegerField(
         default=30
     )
 
-    # Maximum allowed violations for this attempt.
     max_violations = models.PositiveSmallIntegerField(
         default=2
     )
 
-    # Server-calculated assessment deadline.
     expires_at = models.DateTimeField(
         null=True,
         blank=True
     )
 
-    # Number of recorded security violations.
     violation_count = models.PositiveIntegerField(default=0)
 
-    # A terminated attempt cannot accept further answers.
     terminated = models.BooleanField(default=False)
 
     termination_reason = models.CharField(
