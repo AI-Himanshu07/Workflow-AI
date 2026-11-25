@@ -327,9 +327,11 @@ class AssessmentAttempt(models.Model):
         related_name='assessment_attempts'
     )
 
+    # PROTECT prevents deleting an application
+    # when an assessment attempt is linked to it.
     application = models.ForeignKey(
         Application,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name='assessment_attempts'
     )
 

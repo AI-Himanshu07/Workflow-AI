@@ -518,6 +518,7 @@ def student_job_detail(request, job_id):
     )
 
 
+
 # =========================================================
 # APPLY FOR JOB
 # =========================================================
@@ -532,6 +533,25 @@ def apply_job(request, job_id):
     job = get_object_or_404(Job, id=job_id)
 
     if request.method == 'POST':
+
+        # Prevent applying again if an assessment was
+        # previously started for this student and job.
+        previous_attempt = AssessmentAttempt.objects.filter(
+            student=student_profile,
+            job=job
+        ).exists()
+
+        if previous_attempt:
+            messages.error(
+                request,
+                'You have already started or submitted an assessment '
+                'for this job. You cannot apply again or get another attempt.'
+            )
+
+            return redirect(
+                'student_job_detail',
+                job_id=job.id
+            )
 
         application, application_created = Application.objects.get_or_create(
             student=student_profile,
@@ -607,9 +627,31 @@ def withdraw_application(request, application_id):
         student=student_profile
     )
 
+    # Check all attempts for this student and job,
+    # not just attempts linked to the current application.
+    assessment_started = AssessmentAttempt.objects.filter(
+        student=student_profile,
+        job=application.job
+    ).exists()
+
+    if assessment_started:
+
+        messages.error(
+            request,
+            'You cannot withdraw this application because you have '
+            'already started an assessment. Your application is locked.'
+        )
+
+        return redirect('my_applications')
+
     if request.method == 'POST':
+
         application.delete()
-        messages.success(request, 'Application withdrawn.')
+
+        messages.success(
+            request,
+            'Your application has been withdrawn successfully.'
+        )
 
         return redirect('my_applications')
 
@@ -618,6 +660,7 @@ def withdraw_application(request, application_id):
         'core/delete_application.html',
         {'application': application}
     )
+
 
 
 # =========================================================
@@ -1769,6 +1812,7 @@ def admin_applications(request):
     )
 
 
+
 # =========================================================
 # ADMIN ONLY - DELETE APPLICATION
 # =========================================================
@@ -1781,18 +1825,43 @@ def admin_delete_application(request, application_id):
         id=application_id
     )
 
+    # Check whether this application has an assessment attempt.
+    assessment_exists = AssessmentAttempt.objects.filter(
+        application=application
+    ).exists()
+
     if request.method == 'POST':
+
+        # Never delete an application with assessment history.
+        if assessment_exists:
+
+            messages.error(
+                request,
+                'This application cannot be deleted because an '
+                'assessment attempt is linked to it. Assessment '
+                'history must be preserved.'
+            )
+
+            return redirect('admin_applications')
+
         application.delete()
 
-        messages.success(request, 'Application deleted.')
+        messages.success(
+            request,
+            'Application deleted successfully.'
+        )
 
         return redirect('admin_applications')
 
     return render(
         request,
         'core/admin_delete_application.html',
-        {'application': application}
+        {
+            'application': application,
+            'assessment_exists': assessment_exists,
+        }
     )
+
 
 
 # =========================================================
