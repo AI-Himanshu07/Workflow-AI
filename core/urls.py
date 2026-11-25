@@ -24,12 +24,12 @@ urlpatterns = [
     # STUDENT ASSESSMENT
     # =========================
     path(
-    'student/assessment/<int:application_id>/',
-    views.start_assessment,
-    name='start_assessment'
-),
+        'student/assessment/<int:application_id>/',
+        views.start_assessment,
+        name='start_assessment'
+    ),
     path(
-        'student/assessment/<int:job_id>/submit/',
+        'student/assessment/<int:application_id>/submit/',
         views.submit_assessment,
         name='submit_assessment'
     ),
@@ -73,8 +73,11 @@ urlpatterns = [
         views.company_applicants,
         name='company_all_applicants'
     ),
-    path('company/applicant/<int:application_id>/', views.applicant_profile, name='applicant_profile'),
-
+    path(
+        'company/applicant/<int:application_id>/',
+        views.applicant_profile,
+        name='applicant_profile'
+    ),
     path(
         'company/rankings/',
         views.applicant_ranking,
@@ -95,7 +98,11 @@ urlpatterns = [
         views.hiring_workflow_jobs,
         name='hiring_workflow_jobs'
     ),
-    path('company/manage-applicant/<int:application_id>/', views.manage_applicant, name='manage_applicant'),
+    path(
+        'company/manage-applicant/<int:application_id>/',
+        views.manage_applicant,
+        name='manage_applicant'
+    ),
 
     # =========================
     # COMPANY ASSESSMENTS
@@ -126,29 +133,61 @@ urlpatterns = [
     # =========================
     path('workflow-admin/', views.admin_dashboard, name='admin_dashboard'),
     path('workflow-admin/applications/', views.admin_applications, name='admin_applications'),
-    path('workflow-admin/applications/<int:application_id>/delete/', views.admin_delete_application, name='admin_delete_application'),
+    path(
+        'workflow-admin/applications/<int:application_id>/delete/',
+        views.admin_delete_application,
+        name='admin_delete_application'
+    ),
 
     # =========================
     # ADMIN COMPANY VERIFICATION
     # =========================
     path('workflow-admin/company-requests/', views.admin_company_requests, name='admin_company_requests'),
-    path('workflow-admin/company-requests/<int:request_id>/', views.admin_company_request_detail, name='admin_company_request_detail'),
-    path('workflow-admin/company-requests/<int:request_id>/review/', views.review_company_access_request, name='review_company_access_request'),
-    path('workflow-admin/company-requests/<int:request_id>/document/', views.company_verification_document, name='company_verification_document'),
+    path(
+        'workflow-admin/company-requests/<int:request_id>/',
+        views.admin_company_request_detail,
+        name='admin_company_request_detail'
+    ),
+    path(
+        'workflow-admin/company-requests/<int:request_id>/review/',
+        views.review_company_access_request,
+        name='review_company_access_request'
+    ),
+    path(
+        'workflow-admin/company-requests/<int:request_id>/document/',
+        views.company_verification_document,
+        name='company_verification_document'
+    ),
 
     # =========================
     # STUDENT MANAGEMENT
     # =========================
     path('workflow-admin/students/', views.admin_students, name='admin_students'),
-    path('workflow-admin/students/<int:user_id>/toggle/', views.admin_toggle_student, name='admin_toggle_student'),
-    path('workflow-admin/students/<int:user_id>/delete/', views.admin_delete_student, name='admin_delete_student'),
+    path(
+        'workflow-admin/students/<int:user_id>/toggle/',
+        views.admin_toggle_student,
+        name='admin_toggle_student'
+    ),
+    path(
+        'workflow-admin/students/<int:user_id>/delete/',
+        views.admin_delete_student,
+        name='admin_delete_student'
+    ),
 
     # =========================
     # COMPANY MANAGEMENT
     # =========================
     path('workflow-admin/companies/', views.admin_companies, name='admin_companies'),
-    path('workflow-admin/companies/<int:user_id>/toggle/', views.admin_toggle_company, name='admin_toggle_company'),
-    path('workflow-admin/companies/<int:user_id>/delete/', views.admin_delete_company, name='admin_delete_company'),
+    path(
+        'workflow-admin/companies/<int:user_id>/toggle/',
+        views.admin_toggle_company,
+        name='admin_toggle_company'
+    ),
+    path(
+        'workflow-admin/companies/<int:user_id>/delete/',
+        views.admin_delete_company,
+        name='admin_delete_company'
+    ),
 
     # =========================
     # STAFF DASHBOARD
@@ -159,13 +198,14 @@ urlpatterns = [
     # STAFF MANAGEMENT (ADMIN ONLY)
     # =========================
     path('workflow-admin/staff/', views.admin_staff, name='admin_staff'),
-    path('workflow-admin/staff/<int:user_id>/toggle/', views.admin_toggle_staff, name='admin_toggle_staff'),
-    path('workflow-admin/staff/<int:user_id>/delete/', views.admin_delete_staff, name='admin_delete_staff'),
-
     path(
-    'student/assessment/attempt/<int:attempt_id>/violation/',
-    views.record_assessment_violation,
-    name='record_assessment_violation'
-),
-
+        'workflow-admin/staff/<int:user_id>/toggle/',
+        views.admin_toggle_staff,
+        name='admin_toggle_staff'
+    ),
+    path(
+        'workflow-admin/staff/<int:user_id>/delete/',
+        views.admin_delete_staff,
+        name='admin_delete_staff'
+    ),
 ]

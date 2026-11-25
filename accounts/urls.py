@@ -56,36 +56,120 @@ urlpatterns = [
     # STUDENT PROFILE
     # =====================================================
 
-    path('student/profile/', views.student_profile, name='student_profile'),
-    path('student/profile/view/', views.student_profile_view, name='student_profile_view'),
-    path('student/profile/delete/', views.student_profile_delete, name='student_profile_delete'),
+    path(
+        'student/profile/',
+        views.student_profile,
+        name='student_profile'
+    ),
+
+    path(
+        'student/profile/view/',
+        views.student_profile_view,
+        name='student_profile_view'
+    ),
+
+    path(
+        'student/profile/delete/',
+        views.student_profile_delete,
+        name='student_profile_delete'
+    ),
 
     # =====================================================
     # COMPANY PROFILE
     # =====================================================
 
-    path('company/profile/', views.company_profile, name='company_profile'),
-    path('company/profile/view/', views.company_profile_view, name='company_profile_view'),
-    path('company/profile/delete/', views.company_profile_delete, name='company_profile_delete'),
+    path(
+        'company/profile/',
+        views.company_profile,
+        name='company_profile'
+    ),
+
+    path(
+        'company/profile/view/',
+        views.company_profile_view,
+        name='company_profile_view'
+    ),
+
+    path(
+        'company/profile/delete/',
+        views.company_profile_delete,
+        name='company_profile_delete'
+    ),
 
     # =====================================================
     # NOTIFICATIONS
     # =====================================================
 
-    path('notifications/', views.notifications_view, name='notifications'),
-    path('notifications/<int:notification_id>/read/', views.mark_notification_read, name='mark_notification_read'),
-    path('notifications/read-all/', views.mark_all_notifications_read, name='mark_all_notifications_read'),
+    path(
+        'notifications/',
+        views.notifications_view,
+        name='notifications'
+    ),
+
+    path(
+        'notifications/<int:notification_id>/read/',
+        views.mark_notification_read,
+        name='mark_notification_read'
+    ),
+
+    path(
+        'notifications/read-all/',
+        views.mark_all_notifications_read,
+        name='mark_all_notifications_read'
+    ),
 
     # =====================================================
     # MESSAGING SYSTEM
     # =====================================================
 
-    path('messages/', views.message_inbox, name='message_inbox'),
-    path('messages/sent/', views.sent_messages, name='sent_messages'),
-    path('messages/compose/', views.send_message, name='send_message'),
-    path('messages/<int:recipient_id>/', views.message_detail, name='message_detail'),
+    # Unified message history
+    path(
+        'messages/',
+        views.message_inbox,
+        name='message_inbox'
+    ),
 
+    # Old sent URL redirects to unified history
+    path(
+        'messages/sent/',
+        views.sent_messages,
+        name='sent_messages'
+    ),
 
-    path('admin/profile/', views.admin_profile, name='admin_profile'),
-path('staff/profile/', views.staff_profile, name='staff_profile'),
+    # Send a new message
+    path(
+        'messages/compose/',
+        views.send_message,
+        name='send_message'
+    ),
+
+    # Open and read a received message
+    path(
+        'messages/<int:recipient_id>/',
+        views.message_detail,
+        name='message_detail'
+    ),
+
+    # Delete only the logged-in recipient's copy
+    path(
+        'messages/<int:recipient_id>/delete/',
+        views.delete_received_message,
+        name='delete_received_message'
+    ),
+
+    # =====================================================
+    # ADMIN / STAFF PROFILE
+    # =====================================================
+
+    path(
+        'admin/profile/',
+        views.admin_profile,
+        name='admin_profile'
+    ),
+
+    path(
+        'staff/profile/',
+        views.staff_profile,
+        name='staff_profile'
+    ),
 ]

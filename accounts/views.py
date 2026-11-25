@@ -148,14 +148,12 @@ def student_profile(request):
                 }
             )
 
-        # Update registered account email
         request.user.email = new_email
 
         request.user.save(
             update_fields=['email']
         )
 
-        # Update student information
         profile.full_name = request.POST.get(
             'full_name', ''
         ).strip()
@@ -297,14 +295,12 @@ def company_profile(request):
                 }
             )
 
-        # Update registered account email
         request.user.email = new_email
 
         request.user.save(
             update_fields=['email']
         )
 
-        # Update company information
         profile.company_name = request.POST.get(
             'company_name', ''
         ).strip()
@@ -519,7 +515,7 @@ def get_allowed_message_recipients(user):
 
 
 # =========================================================
-# MESSAGE INBOX
+# MESSAGE HISTORY - RECEIVED + SENT
 # =========================================================
 
 @login_required
@@ -530,7 +526,13 @@ def message_inbox(request):
     ).select_related(
         'message',
         'message__sender'
-    )
+    ).order_by('-message__created_at')
+
+    sent = Message.objects.filter(
+        sender=request.user
+    ).prefetch_related(
+        'recipients__recipient'
+    ).order_by('-created_at')
 
     search = request.GET.get('q', '').strip()
 
@@ -544,17 +546,27 @@ def message_inbox(request):
             Q(message__sender__username__icontains=search)
         )
 
+        sent = sent.filter(
+            Q(subject__icontains=search) |
+            Q(body__icontains=search) |
+            Q(recipients__recipient__username__icontains=search)
+        ).distinct()
+
     if status == 'unread':
 
         received = received.filter(
             is_read=False
         )
 
+        sent = Message.objects.none()
+
     elif status == 'read':
 
         received = received.filter(
             is_read=True
         )
+
+        sent = Message.objects.none()
 
     unread_count = MessageRecipient.objects.filter(
         recipient=request.user,
@@ -566,6 +578,7 @@ def message_inbox(request):
         'accounts/message_inbox.html',
         {
             'received_messages': received,
+            'sent_messages': sent,
             'unread_count': unread_count,
             'search': search,
             'status': status,
@@ -574,36 +587,13 @@ def message_inbox(request):
 
 
 # =========================================================
-# SENT MESSAGES
+# OLD SENT MESSAGES URL - REDIRECT TO HISTORY
 # =========================================================
 
 @login_required
 def sent_messages(request):
 
-    sent = Message.objects.filter(
-        sender=request.user
-    ).prefetch_related(
-        'recipients__recipient'
-    )
-
-    search = request.GET.get('q', '').strip()
-
-    if search:
-
-        sent = sent.filter(
-            Q(subject__icontains=search) |
-            Q(body__icontains=search) |
-            Q(recipients__recipient__username__icontains=search)
-        ).distinct()
-
-    return render(
-        request,
-        'accounts/sent_messages.html',
-        {
-            'sent_messages': sent,
-            'search': search,
-        }
-    )
+    return redirect('message_inbox')
 
 
 # =========================================================
@@ -723,7 +713,7 @@ def send_message(request):
 
                     email_addresses.append(recipient.email)
 
-        # Existing interview email behaviour retained
+        # Keep existing interview email behaviour
         if message_type == 'interview' and email_addresses:
 
             send_mail(
@@ -744,7 +734,7 @@ def send_message(request):
                 fail_silently=True,
             )
 
-        return redirect('sent_messages')
+        return redirect('message_inbox')
 
     return render(
         request,
@@ -792,18 +782,35 @@ def message_detail(request, recipient_id):
 
 
 # =========================================================
+# DELETE RECEIVED MESSAGE - DELETE ONLY MY COPY
+# =========================================================
+
+@login_required
+@require_POST
+def delete_received_message(request, recipient_id):
+
+    message_recipient = get_object_or_404(
+        MessageRecipient,
+        id=recipient_id,
+        recipient=request.user
+    )
+
+    message_recipient.delete()
+
+    return redirect('message_inbox')
+
+
+# =========================================================
 # ADMIN AND STAFF ACCOUNT PROFILE
 # =========================================================
 
 def update_account_profile(request, role):
 
-    # Admin-only profile protection
     if role == 'admin':
 
         if not request.user.is_superuser:
             raise PermissionDenied
 
-    # Staff-only profile protection
     elif role == 'staff':
 
         if not request.user.is_staff or request.user.is_superuser:
@@ -828,7 +835,6 @@ def update_account_profile(request, role):
             'last_name', ''
         ).strip()
 
-        # Validate email
         try:
             validate_email(new_email)
 
@@ -838,7 +844,6 @@ def update_account_profile(request, role):
                 'Please enter a valid email address.'
             )
 
-        # Check email uniqueness
         if not email_error:
 
             if User.objects.filter(

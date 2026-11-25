@@ -416,8 +416,12 @@
                 {% endif %}
             </a>
 
+            <a href="{% url 'send_message' %}" class="notification-btn">
+                ✉️ Send Message
+            </a>
+
             <a href="{% url 'message_inbox' %}" class="notification-btn">
-                ✉️ Messages
+                💬 History
             </a>
 
             <a href="{% url 'logout' %}" class="logout-btn">
@@ -469,35 +473,28 @@
 
         <div class="row g-3">
 
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="communication-card">
-                    <div class="communication-icon">📥</div>
-                    <h5>Inbox</h5>
-                    <p>Read messages from administrators, staff and other permitted senders.</p>
-                    <a href="{% url 'message_inbox' %}" class="communication-link">
-                        Open Inbox →
-                    </a>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="communication-card">
-                    <div class="communication-icon">📤</div>
-                    <h5>Sent Messages</h5>
-                    <p>Review messages sent to applicants and check their read status.</p>
-                    <a href="{% url 'sent_messages' %}" class="communication-link">
-                        View Sent Messages →
-                    </a>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="communication-card">
-                    <div class="communication-icon">✏️</div>
-                    <h5>Compose Message</h5>
-                    <p>Write messages to students who have applied for your jobs.</p>
+                    <div class="communication-icon">✉️</div>
+                    <h5>Send Message</h5>
+                    <p>
+                        Send interview updates and important messages to students who have applied for your jobs.
+                    </p>
                     <a href="{% url 'send_message' %}" class="communication-link">
-                        Write a Message →
+                        Send a Message →
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="communication-card">
+                    <div class="communication-icon">💬</div>
+                    <h5>Message History</h5>
+                    <p>
+                        View your received and sent messages together and review previous communications.
+                    </p>
+                    <a href="{% url 'message_inbox' %}" class="communication-link">
+                        View Message History →
                     </a>
                 </div>
             </div>
